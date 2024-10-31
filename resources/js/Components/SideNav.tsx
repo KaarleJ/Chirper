@@ -10,7 +10,7 @@ import {
 
 export default function SideNav() {
   return (
-    <div className="min-h-screen p-16">
+    <div className="min-h-screen p-24 border-r">
       <NavigationMenu orientation="vertical">
         <NavigationMenuList className="flex-col items-start justify-start gap-6 w-[10rem]">
           <NavigationMenuItem className="mb-10">
@@ -27,7 +27,7 @@ export default function SideNav() {
             <NavLink href="/chirps"><Bell size={24} /> Chirps</NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Button asChild className="text-xl font-semibold rounded-full px-8 mt-8">
+            <Button asChild className="text-xl font-semibold rounded-full px-8 mt-8 transition-all">
               <NavLink href="/chirps">Chirp</NavLink>
             </Button>
           </NavigationMenuItem>

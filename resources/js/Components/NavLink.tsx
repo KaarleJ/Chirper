@@ -11,7 +11,7 @@ export default function NavLink({
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-4 text-foreground text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
+        "flex items-center gap-4 text-foreground text-xl font-semibold hover:opacity-50 transition-all",
         className
       )}
       {...props}
