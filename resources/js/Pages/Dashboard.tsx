@@ -1,3 +1,4 @@
+import Header from "@/Components/Header";
 import { Button } from "@/Components/ui/button";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
@@ -5,8 +6,9 @@ import { Head } from "@inertiajs/react";
 export default function Dashboard() {
   return (
     <AuthenticatedLayout>
-      <Head title="Dashboard" />
+      <Head title="Home" />
 
+      <Header title="Home" />
       <div className="py-12">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">

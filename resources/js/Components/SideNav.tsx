@@ -10,24 +10,24 @@ import {
 
 export default function SideNav() {
   return (
-    <div className="min-h-screen p-24 border-r">
+    <div className="min-h-screen px-24 py-8 border-r">
       <NavigationMenu orientation="vertical">
         <NavigationMenuList className="flex-col items-start justify-start gap-6 w-[10rem]">
           <NavigationMenuItem className="mb-10">
             <NavLink href="/">
-              <ApplicationLogo className="h-16 w-auto fill-current text-gray-800" />
+              <ApplicationLogo className="h-14 w-auto fill-current" />
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavLink href="/dashboard">
-              <House size={24} /> Dashboard
+              <House size={24} /> Home
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavLink href="/chirps"><Bell size={24} /> Chirps</NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Button asChild className="text-xl font-semibold rounded-full px-8 mt-8 transition-all">
+            <Button asChild className="text-lg font-semibold rounded-full px-8 mt-8 transition-all">
               <NavLink href="/chirps">Chirp</NavLink>
             </Button>
           </NavigationMenuItem>
