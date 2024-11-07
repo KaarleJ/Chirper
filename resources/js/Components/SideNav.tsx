@@ -7,6 +7,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "./ui/navigation-menu";
+import ProfileMenu from "./ProfileMenu";
 
 export default function SideNav() {
   return (
@@ -18,33 +19,31 @@ export default function SideNav() {
               <ApplicationLogo className="h-14 w-auto fill-current" />
             </NavLink>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
             <NavLink href="/dashboard">
               <House size={24} /> Home
             </NavLink>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
             <NavLink href="/chirps">
               <Bell size={24} /> Chirps
             </NavLink>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
             <NavLink
-              href={route("logout")}
-              method="post"
+              href="/chirps"
               as="button"
               className="text-lg bg-primary text-primary-foreground rounded-full px-8 py-2 transition-all"
             >
-              logout
+              Chirp
             </NavLink>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
-            <Button
-              asChild
-              className="text-lg font-semibold rounded-full px-8 mt-8 transition-all"
-            >
-              <NavLink href="/chirps">Chirp</NavLink>
-            </Button>
+            <ProfileMenu />
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
