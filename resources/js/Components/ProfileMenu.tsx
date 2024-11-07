@@ -14,7 +14,7 @@ export default function ProfileMenu() {
   const profilePicture = auth.user.profile_picture;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-end text-foreground text-xl font-semibold hover:bg-accent py-2 transition-all text-nowrap rounded-full w-max">
+      <DropdownMenuTrigger className="flex items-center text-foreground text-xl font-semibold hover:bg-accent py-2 transition-all text-nowrap rounded-full w-max">
         <img
           src={profilePicture}
           alt="Profile Picture"
