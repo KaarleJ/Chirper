@@ -23,11 +23,14 @@ class SocialAuthController extends Controller
 
     $user = User::where('email', $socialUser->email)->first();
 
+    $profilePicture = $socialUser->getAvatar();
+
     if ($user) {
       $user->update([
         "{$provider}_id" => $socialUser->id,
         "{$provider}_token" => $socialUser->token,
         "{$provider}_refresh_token" => $socialUser->refreshToken,
+        'profile_picture' => $profilePicture,
       ]);
     } else {
       $user = User::create([
@@ -36,6 +39,7 @@ class SocialAuthController extends Controller
         "{$provider}_id" => $socialUser->id,
         "{$provider}_token" => $socialUser->token,
         "{$provider}_refresh_token" => $socialUser->refreshToken,
+        'profile_picture' => $profilePicture,
       ]);
     }
 
