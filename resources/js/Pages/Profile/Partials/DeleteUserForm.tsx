@@ -3,7 +3,14 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler, useRef, useState } from "react";
-import Modal from "@/Components/Modal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/Components/ui/dialog";
 
 export default function DeleteUserForm({
   className = "",
@@ -47,6 +54,14 @@ export default function DeleteUserForm({
     reset();
   };
 
+  const onOpenChange = () => {
+    if (confirmingUserDeletion) {
+      closeModal();
+    } else {
+      setConfirmingUserDeletion(true);
+    }
+  };
+
   return (
     <section className={`space-y-6 ${className}`}>
       <header>
@@ -58,57 +73,59 @@ export default function DeleteUserForm({
           data or information that you wish to retain.
         </p>
       </header>
+      <Dialog open={confirmingUserDeletion} onOpenChange={onOpenChange}>
+        <DialogTrigger asChild>
+          <Button variant="destructive" onClick={confirmUserDeletion}>
+            Delete Account
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <form onSubmit={deleteUser} className="p-6">
+            <h2 className="text-lg font-medium text-gray-900">
+              Are you sure you want to delete your account?
+            </h2>
 
-      <Button variant="destructive" onClick={confirmUserDeletion}>
-        Delete Account
-      </Button>
+            <p className="mt-1 text-sm text-gray-600">
+              Once your account is deleted, all of its resources and data will
+              be permanently deleted. Please enter your password to confirm you
+              would like to permanently delete your account.
+            </p>
 
-      <Modal show={confirmingUserDeletion} onClose={closeModal}>
-        <form onSubmit={deleteUser} className="p-6">
-          <h2 className="text-lg font-medium text-gray-900">
-            Are you sure you want to delete your account?
-          </h2>
+            <div className="mt-6">
+              <Label htmlFor="password" className="sr-only">
+                Password
+              </Label>
 
-          <p className="mt-1 text-sm text-gray-600">
-            Once your account is deleted, all of its resources and data will be
-            permanently deleted. Please enter your password to confirm you would
-            like to permanently delete your account.
-          </p>
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                ref={passwordInput}
+                value={data.password}
+                onChange={(e) => setData("password", e.target.value)}
+                className="mt-1 block w-3/4"
+                placeholder="Password"
+              />
 
-          <div className="mt-6">
-            <Label htmlFor="password" className="sr-only">
-              Password
-            </Label>
+              <p className="text-destructive mt-2">{errors.password}</p>
+            </div>
 
-            <Input
-              id="password"
-              type="password"
-              name="password"
-              ref={passwordInput}
-              value={data.password}
-              onChange={(e) => setData("password", e.target.value)}
-              className="mt-1 block w-3/4"
-              placeholder="Password"
-            />
+            <div className="mt-6 flex justify-end">
+              <Button variant="secondary" onClick={closeModal}>
+                Cancel
+              </Button>
 
-            <p className="text-destructive mt-2">{errors.password}</p>
-          </div>
-
-          <div className="mt-6 flex justify-end">
-            <Button variant="secondary" onClick={closeModal}>
-              Cancel
-            </Button>
-
-            <Button
-              variant="destructive"
-              className="ms-3"
-              disabled={processing}
-            >
-              Delete Account
-            </Button>
-          </div>
-        </form>
-      </Modal>
+              <Button
+                variant="destructive"
+                className="ms-3"
+                disabled={processing}
+              >
+                Delete Account
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
