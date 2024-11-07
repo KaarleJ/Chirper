@@ -9,3 +9,6 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Ignore shadcn code from language statistics since it only contains copy pasted code.
+resources/js/components/ui/* linguist-vendored
