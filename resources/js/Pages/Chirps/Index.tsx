@@ -1,12 +1,11 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 import { useForm, Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
 import Chirp from "@/Components/Chirp";
 import { Chirp as ChirpType } from "@/types";
 import Header from "@/Components/Header";
+import { Button } from "@/Components/ui/button";
 
 export default function Index({
   auth,
@@ -34,10 +33,10 @@ export default function Index({
             className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
             onChange={(e) => setData("message", e.target.value)}
           ></textarea>
-          <InputError message={errors.message} className="mt-2" />
-          <PrimaryButton className="mt-4" disabled={processing}>
+          <p className="text-destructive">{errors.message}</p>
+          <Button className="mt-4" disabled={processing}>
             Chirp
-          </PrimaryButton>
+          </Button>
         </form>
 
         <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">

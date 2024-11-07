@@ -1,11 +1,9 @@
 import { FormEvent, useState } from "react";
-import Dropdown from "@/Components/Dropdown";
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useForm, usePage } from "@inertiajs/react";
 import { Chirp as ChirpType } from "@/types";
+import { Button } from "./ui/button";
 
 dayjs.extend(relativeTime);
 
@@ -55,7 +53,8 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
                             </small>
                         )}
                     </div>
-                    {chirp.user.id === auth.user.id && (
+                    
+                    {/*chirp.user.id === auth.user.id && (
                         <Dropdown>
                             <Dropdown.Trigger>
                                 <button>
@@ -85,7 +84,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
                                 </Dropdown.Link>
                             </Dropdown.Content>
                         </Dropdown>
-                    )}
+                    )*/}
                 </div>
                 {editing ? (
                     <form onSubmit={submit}>
@@ -94,9 +93,9 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
                             onChange={(e) => setData("message", e.target.value)}
                             className="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         ></textarea>
-                        <InputError message={errors.message} className="mt-2" />
+                        <p className="text-destructive">{errors.message}</p>
                         <div className="space-x-2">
-                            <PrimaryButton className="mt-4">Save</PrimaryButton>
+                            <Button>Save</Button>
                             <button
                                 className="mt-4"
                                 onClick={() => {
