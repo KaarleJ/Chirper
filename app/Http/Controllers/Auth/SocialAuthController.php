@@ -31,11 +31,13 @@ class SocialAuthController extends Controller
         "{$provider}_token" => $socialUser->token,
         "{$provider}_refresh_token" => $socialUser->refreshToken,
         'profile_picture' => $profilePicture,
+        'is_social' => true,
       ]);
     } else {
       $user = User::create([
-        'name' => $socialUser->name ?? $socialUser->nickname,
+        'name' => $socialUser->nickname ?? $socialUser->name,
         'email' => $socialUser->email,
+        'is_social' => true,
         "{$provider}_id" => $socialUser->id,
         "{$provider}_token" => $socialUser->token,
         "{$provider}_refresh_token" => $socialUser->refreshToken,
