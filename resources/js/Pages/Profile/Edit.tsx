@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import type { PageProps } from "@/types";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
@@ -17,6 +17,9 @@ export default function Edit({
   mustVerifyEmail,
   status,
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
+  const { auth } = usePage().props;
+  const isSocial = auth.user.is_social;
+
   return (
     <AuthenticatedLayout>
       <Head title="Profile" />
@@ -28,30 +31,33 @@ export default function Edit({
             <CardHeader>
               <CardTitle>Profile information</CardTitle>
               <CardDescription>
-                Update your account's profile information and email address.
+                Update your account's profile information.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <UpdateProfileInformationForm
                 mustVerifyEmail={mustVerifyEmail}
                 status={status}
+                isSocial={isSocial}
                 className="max-w-xl"
               />
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Update Password</CardTitle>
-              <CardDescription>
-                Ensure your account is using a long, random password to stay
-                secure.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <UpdatePasswordForm className="max-w-xl" />
-            </CardContent>
-          </Card>
+          {!isSocial && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Update Password</CardTitle>
+                <CardDescription>
+                  Ensure your account is using a long, random password to stay
+                  secure.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <UpdatePasswordForm className="max-w-xl" />
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>

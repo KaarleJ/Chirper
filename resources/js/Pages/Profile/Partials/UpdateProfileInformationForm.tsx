@@ -8,10 +8,12 @@ import { FormEventHandler } from "react";
 export default function UpdateProfileInformation({
   mustVerifyEmail,
   status,
+  isSocial,
   className = "",
 }: {
   mustVerifyEmail: boolean;
   status?: string;
+  isSocial: boolean;
   className?: string;
 }) {
   const user = usePage().props.auth.user;
@@ -46,21 +48,23 @@ export default function UpdateProfileInformation({
           <p className="text-destructive mt-2">{errors.name}</p>
         </div>
 
-        <div>
-          <Label htmlFor="email">Email</Label>
+        {!isSocial && (
+          <div>
+            <Label htmlFor="email">Email</Label>
 
-          <Input
-            id="email"
-            type="email"
-            className="mt-1 block w-full"
-            value={data.email}
-            onChange={(e) => setData("email", e.target.value)}
-            required
-            autoComplete="username"
-          />
+            <Input
+              id="email"
+              type="email"
+              className="mt-1 block w-full"
+              value={data.email}
+              onChange={(e) => setData("email", e.target.value)}
+              required
+              autoComplete="username"
+            />
 
-          <p className="text-destructive mt-2">{errors.email}</p>
-        </div>
+            <p className="text-destructive mt-2">{errors.email}</p>
+          </div>
+        )}
 
         {mustVerifyEmail && user.email_verified_at === null && (
           <div>
