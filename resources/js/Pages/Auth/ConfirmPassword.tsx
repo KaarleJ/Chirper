@@ -29,7 +29,7 @@ export default function ConfirmPassword() {
 
       <form onSubmit={submit}>
         <div className="mt-4">
-          <Label htmlFor="password">Psssword</Label>
+          <Label htmlFor="password">Password</Label>
 
           <Input
             id="password"
