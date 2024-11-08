@@ -32,7 +32,7 @@ export default function Index({
             placeholder="What's on your mind?"
             className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
             onChange={(e) => setData("message", e.target.value)}
-          ></textarea>
+          />
           <p className="text-destructive">{errors.message}</p>
           <Button className="mt-4" disabled={processing}>
             Chirp
