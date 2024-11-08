@@ -1,6 +1,6 @@
 import ApplicationLogo from "./ApplicationLogo";
 import NavLink from "./NavLink";
-import { Button } from "./ui/button";
+import { User } from "lucide-react";
 import { House, Bell } from "lucide-react";
 import {
   NavigationMenu,
@@ -13,7 +13,7 @@ export default function SideNav() {
   return (
     <div className="min-h-screen px-24 py-8 border-r">
       <NavigationMenu orientation="vertical">
-        <NavigationMenuList className="flex-col items-start justify-start gap-6 w-[10rem]">
+        <NavigationMenuList className="flex-col items-start justify-start gap-8 w-[10rem]">
           <NavigationMenuItem className="mb-10">
             <NavLink href="/">
               <ApplicationLogo className="h-14 w-auto fill-current" />
@@ -33,10 +33,17 @@ export default function SideNav() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
+            <NavLink href={route("profile.edit")}>
+              <User />
+              Profile
+            </NavLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
             <NavLink
-              href="/chirps"
+              href={route("chirps.index")}
               as="button"
-              className="text-lg bg-primary text-primary-foreground rounded-full px-8 py-2 transition-all"
+              className="text-lg bg-primary text-primary-foreground rounded-full px-8 py-2 mt-8 transition-all"
             >
               Chirp
             </NavLink>
