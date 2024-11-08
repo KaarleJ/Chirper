@@ -15,19 +15,19 @@ export default function SideNav() {
       <NavigationMenu orientation="vertical">
         <NavigationMenuList className="flex-col items-start justify-start gap-8 w-[10rem]">
           <NavigationMenuItem className="mb-10">
-            <NavLink href="/">
+            <NavLink href={"/"}>
               <ApplicationLogo className="h-14 w-auto fill-current" />
             </NavLink>
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavLink href="/dashboard">
+            <NavLink href={route("dashboard")}>
               <House size={24} /> Home
             </NavLink>
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavLink href="/chirps">
+            <NavLink href={route("chirps.index")}>
               <Bell size={24} /> Chirps
             </NavLink>
           </NavigationMenuItem>
