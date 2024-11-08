@@ -42,7 +42,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
         <p className="text-destructive mt-2">{errors.email}</p>
 
         <div className="mt-4 flex items-center justify-end">
-          <Button className="ms-4 text-destructive" disabled={processing}>
+          <Button className="ms-4" variant="destructive" disabled={processing}>
             Email Password Reset Link
           </Button>
         </div>
