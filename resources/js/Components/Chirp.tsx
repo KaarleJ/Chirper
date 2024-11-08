@@ -45,7 +45,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
             )}
           </div>
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button className="rounded-full" variant="ghost" size="icon">
                 <Ellipsis className="text-gray-600" />
               </Button>
