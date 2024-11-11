@@ -1,13 +1,10 @@
-import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
 import { useForm } from "@inertiajs/react";
-import { FormEventHandler, useRef, useState } from "react";
+import { FormEventHandler, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/Components/ui/dialog";
@@ -17,92 +14,39 @@ export default function DeleteUserForm({
 }: {
   className?: string;
 }) {
-  const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
-  const passwordInput = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
 
-  const {
-    data,
-    setData,
-    delete: destroy,
-    processing,
-    reset,
-    errors,
-    clearErrors,
-  } = useForm({
+  const { post, processing } = useForm({
     password: "",
   });
-
-  const confirmUserDeletion = () => {
-    setConfirmingUserDeletion(true);
-  };
 
   const deleteUser: FormEventHandler = (e) => {
     e.preventDefault();
 
-    destroy(route("profile.destroy"), {
+    post(route("profile.requestDelete"), {
       preserveScroll: true,
-      onSuccess: () => closeModal(),
-      onError: () => passwordInput.current?.focus(),
-      onFinish: () => reset(),
+      onSuccess: () => () => setOpen(false),
     });
-  };
-
-  const closeModal = () => {
-    setConfirmingUserDeletion(false);
-
-    clearErrors();
-    reset();
-  };
-
-  const onOpenChange = () => {
-    if (confirmingUserDeletion) {
-      closeModal();
-    } else {
-      setConfirmingUserDeletion(true);
-    }
   };
 
   return (
     <section className={`space-y-6 ${className}`}>
-      <Dialog open={confirmingUserDeletion} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={() => setOpen(!open)}>
         <DialogTrigger asChild>
-          <Button variant="destructive" onClick={confirmUserDeletion}>
+          <Button variant="destructive" onClick={() => setOpen(true)}>
             Delete Account
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <form onSubmit={deleteUser} className="p-6">
-            <h2 className="text-lg font-medium text-gray-900">
-              Are you sure you want to delete your account?
-            </h2>
-
-            <p className="mt-1 text-sm text-gray-600">
-              Once your account is deleted, all of its resources and data will
-              be permanently deleted. Please enter your password to confirm you
-              would like to permanently delete your account.
-            </p>
-
-            <div className="mt-6">
-              <Label htmlFor="password" className="sr-only">
-                Password
-              </Label>
-
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                ref={passwordInput}
-                value={data.password}
-                onChange={(e) => setData("password", e.target.value)}
-                className="mt-1 block w-3/4"
-                placeholder="Password"
-              />
-
-              <p className="text-destructive mt-2">{errors.password}</p>
-            </div>
-
-            <div className="mt-6 flex justify-end">
-              <Button variant="secondary" onClick={closeModal}>
+          <DialogTitle>
+            Are you sure you want to delete your account?
+          </DialogTitle>
+          <DialogDescription>
+            A confirmation email will be sent to you.
+          </DialogDescription>
+          <form onSubmit={deleteUser}>
+            <div className="flex justify-start">
+              <Button variant="secondary" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
 
