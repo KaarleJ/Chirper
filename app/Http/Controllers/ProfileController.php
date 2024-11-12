@@ -85,9 +85,6 @@ class ProfileController extends Controller
     public function confirmDelete($userId)
     {
         $user = User::where('id', $userId)->first();
-        if (Auth::user()->id != $user->id) {
-            abort(403);
-        }
         $user->delete();
 
         return redirect('/')->with('status', 'Your account has been successfully deleted.');

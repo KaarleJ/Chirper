@@ -26,8 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/request-delete', [ProfileController::class, 'requestDelete'])->name('profile.requestDelete');
-    Route::get('/profile/confirm-delete/{userId}', [ProfileController::class, 'confirmDelete'])->name('profile.confirmDelete');
 });
+
+Route::get('/profile/confirm-delete/{userId}', [ProfileController::class, 'confirmDelete'])->middleware('signed')->name('profile.confirmDelete');
 
 Route::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect']);
 Route::get('/auth/callback/{provider}', [SocialAuthController::class, 'callback']);
