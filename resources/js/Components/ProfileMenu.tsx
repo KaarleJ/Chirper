@@ -5,18 +5,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { UserRound as User } from "lucide-react";
 
 export default function ProfileMenu() {
   const { auth } = usePage().props;
   const profilePicture = auth.user.profile_picture;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center text-foreground text-xl font-semibold hover:bg-accent py-2 transition-all text-nowrap rounded-full w-max">
-        <img
-          src={profilePicture}
-          alt="Profile Picture"
-          className="w-10 h-10 rounded-full"
-        />{" "}
+      <DropdownMenuTrigger className="flex items-center text-foreground text-xl font-semibold hover:opacity-50 py-2 transition-all text-nowrap rounded-full w-max">
+        {profilePicture ? (
+          <img
+            src={profilePicture}
+            alt="Profile Picture"
+            className="w-10 h-10 rounded-full"
+          />
+        ) : (
+          <User />
+        )}
         <div className="flex flex-col items-start">
           <p className="text-lg px-2">{auth.user.name}</p>
           <p className="text-sm px-2 text-gray-500 font-thin">
