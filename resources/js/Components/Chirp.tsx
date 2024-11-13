@@ -36,7 +36,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <div>
-            <span className="text-gray-800">{chirp.user.name}</span>
+            <span className="text-gray-800">{chirp.user.username}</span>
             <small className="ml-2 text-sm text-gray-600">
               {dayjs(chirp.created_at).fromNow()}
             </small>
