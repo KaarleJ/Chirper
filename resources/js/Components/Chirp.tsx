@@ -16,6 +16,7 @@ dayjs.extend(relativeTime);
 
 export default function Chirp({ chirp }: { chirp: ChirpType }) {
   const { auth } = usePage().props;
+  const isOwner = auth.user.id === chirp.user.id;
 
   const [editing, setEditing] = useState(false);
 
@@ -31,8 +32,8 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   };
 
   return (
-    <div className="p-6 flex space-x-2">
-      <MessageCircleMore className="text-gray-600 mt-2" />
+    <div className="p-8 flex space-x-2 border-b">
+      <MessageCircleMore className="text-gray-600" />
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <div>
@@ -44,33 +45,37 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
               <small className="text-sm text-gray-600"> &middot; edited</small>
             )}
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="rounded-full" variant="ghost" size="icon">
-                <Ellipsis className="text-gray-600" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out">
-                <button
-                  onClick={() => setEditing(true)}
-                  className="w-full text-left"
-                >
-                  Edit
-                </button>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out">
-                <Link
-                  as="button"
-                  href={route("chirps.destroy", chirp.id)}
-                  method="delete"
-                  className="w-full text-left"
-                >
-                  Delete
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isOwner ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="rounded-full" variant="ghost" size="icon">
+                  <Ellipsis className="text-gray-600" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out">
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="w-full text-left"
+                  >
+                    Edit
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out">
+                  <Link
+                    as="button"
+                    href={route("chirps.destroy", chirp.id)}
+                    method="delete"
+                    className="w-full text-left"
+                  >
+                    Delete
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div></div>
+          )}
         </div>
         {editing ? (
           <form onSubmit={submit}>

@@ -25,8 +25,8 @@ export default function Index({
       <Head title="Chirps" />
 
       <Header title="Chirps" />
-      <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-        <form onSubmit={submit}>
+      <div className="w-full">
+        <form onSubmit={submit} className="p-8 border-b">
           <textarea
             value={data.message}
             placeholder="What's on your mind?"
