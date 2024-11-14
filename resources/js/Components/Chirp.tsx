@@ -10,7 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Ellipsis, MessageCircleMore } from "lucide-react";
+import { Ellipsis } from "lucide-react";
+import {
+  UserRound as User,
+  MessageCircleReply as Reply,
+  MessageCirclePlus as Repost,
+  Heart as Like,
+  Star as Favorite,
+} from "lucide-react";
 
 dayjs.extend(relativeTime);
 
@@ -32,12 +39,22 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   };
 
   return (
-    <div className="p-8 flex space-x-2 border-b">
-      <MessageCircleMore className="text-gray-600" />
+    <div className="px-8 py-4 flex space-x-2 border-b">
+      {chirp.user.profile_picture ? (
+        <img
+          src={chirp.user.profile_picture}
+          alt="Profile Picture"
+          className="w-10 h-10 rounded-full"
+        />
+      ) : (
+        <User />
+      )}
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <div>
-            <span className="text-gray-800">{chirp.user.username}</span>
+            <span className="text-gray-800 font-semibold text-lg">
+              {chirp.user.username}
+            </span>
             <small className="ml-2 text-sm text-gray-600">
               {dayjs(chirp.created_at).fromNow()}
             </small>
@@ -102,6 +119,36 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
         ) : (
           <p className="mt-4 text-lg text-gray-900">{chirp.message}</p>
         )}
+        <div className="w-full flex justify-start gap-10 pt-4">
+          <Button
+            className="rounded-full text-gray-500"
+            size="icon"
+            variant="ghost"
+          >
+            <Reply />
+          </Button>
+          <Button
+            className="rounded-full text-gray-500"
+            size="icon"
+            variant="ghost"
+          >
+            <Repost />
+          </Button>
+          <Button
+            className="rounded-full text-gray-500"
+            size="icon"
+            variant="ghost"
+          >
+            <Like />
+          </Button>
+          <Button
+            className="rounded-full text-gray-500"
+            size="icon"
+            variant="ghost"
+          >
+            <Favorite />
+          </Button>
+        </div>
       </div>
     </div>
   );
