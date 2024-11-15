@@ -48,8 +48,7 @@ COPY . .
 COPY --from=composer /var/www/html/vendor /var/www/html/vendor
 
 # Copy built assets
-COPY --from=node /var/www/html/public/js /var/www/html/public/js
-COPY --from=node /var/www/html/public/css /var/www/html/public/css
+COPY --from=node /var/www/html/public/build /var/www/html/public/build
 
 # Run Laravel post-install scripts
 RUN php artisan package:discover
