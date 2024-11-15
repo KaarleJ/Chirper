@@ -3,6 +3,7 @@ FROM php:8.2-apache
 # Install dependencies
 RUN apt-get update && \
     apt-get install -y \
+    libpq-dev \  
     libzip-dev \
     zip \
     curl \
@@ -39,3 +40,4 @@ RUN npm run build
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
