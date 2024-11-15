@@ -1,10 +1,10 @@
 import { User } from "@/types";
 import { UserRound as UserIcon } from "lucide-react";
-import { Button } from "./ui/button";
 import { Link } from "@inertiajs/react";
 
 export default function UserCard({ user }: { user: User }) {
   const profilePicture = user.profile_picture;
+
   return (
     <Link
       href={`/profile/${user.id}`}
@@ -28,9 +28,25 @@ export default function UserCard({ user }: { user: User }) {
         </div>
       </div>
 
-      <Button className="rounded-full" size="sm">
-        follow
-      </Button>
+      {user.is_following ? (
+        <Link
+          href={route("profile.unfollow", { user: user.id })}
+          method="post"
+          as="button"
+          className="border bg-secondary text-secondary-foreground rounded-full px-4 py-2 h-10 transition-all hover:brightness-110"
+        >
+          Unfollow
+        </Link>
+      ) : (
+        <Link
+          href={route("profile.follow", { user: user.id })}
+          method="post"
+          as="button"
+          className="bg-primary text-primary-foreground rounded-full px-4 py-2 h-10 transition-all hover:brightness-110"
+        >
+          Follow
+        </Link>
+      )}
     </Link>
   );
 }

@@ -5,6 +5,7 @@ export interface User {
   email_verified_at?: string;
   profile_picture?: string;
   username?: string;
+  is_following?: boolean;
   is_social: boolean;
 }
 

@@ -23,7 +23,7 @@ export default function SearchBar() {
       {!isSearch && (
         <form className="relative w-[20rem]" onSubmit={submit}>
           <Input
-            className="rounded-full pl-10 w-full"
+            className="rounded-full pl-4 w-full"
             placeholder="search"
             value={data.query}
             onChange={(e) => setData("query", e.target.value)}
