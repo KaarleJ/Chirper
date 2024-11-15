@@ -1,75 +1,32 @@
-# Stage 1: Composer Dependencies
-FROM composer:2 AS composer
-
-WORKDIR /var/www/html
-
-# Copy composer files
-COPY composer.json composer.lock ./
-
-# Install dependencies without running post-install scripts
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-
-# Stage 2: Node.js Dependencies and Build
-FROM node:20-alpine AS node
-
-WORKDIR /var/www/html
-
-# Copy package files
-COPY package.json package-lock.json ./
+FROM php:8.2-apache
 
 # Install dependencies
-RUN npm ci
+RUN apt-get update && \
+    apt-get install -y \
+    libzip-dev \
+    zip
 
-# Copy all files
-COPY . .
+# Enable mod_rewrite
+RUN a2enmod rewrite
 
-# Build assets for production
-RUN npm run build
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql zip
 
-# Stage 3: Production Image
-FROM php:8.2-fpm-alpine
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Install system dependencies
-RUN apk --no-cache add \
-    nginx \
-    supervisor \
-    curl \
-    bash \
-    shadow \
-    && rm -rf /var/cache/apk/*
+# Copy the application code
+COPY . /var/www/html
 
-# Set working directory
+# Set the working directory
 WORKDIR /var/www/html
 
-# Copy application code
-COPY . .
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy Composer dependencies
-COPY --from=composer /var/www/html/vendor /var/www/html/vendor
-
-# Copy built assets
-COPY --from=node /var/www/html/public/build /var/www/html/public/build
-
-# Configure PHP-FPM to listen on TCP socket
-RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
-
-# Run Laravel post-install scripts
-RUN php artisan package:discover
-
-# Copy configuration files
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY supervisord.conf /etc/supervisord.conf
+# Install project dependencies
+RUN composer install
 
 # Set permissions
-RUN adduser -D -u 1000 www
-RUN chown -R www:www /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Expose port 80
-EXPOSE 8080
-
-# Set environment variables
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-
-# Start supervisord to manage PHP-FPM and Nginx
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
