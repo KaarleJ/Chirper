@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
     }
 
     return Inertia::render('Welcome', [
@@ -24,9 +24,7 @@ Route::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect'
 Route::get('/auth/callback/{provider}', [SocialAuthController::class, 'callback']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/home', [ChirpController::class, 'index'])->name('home');
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 });
 
