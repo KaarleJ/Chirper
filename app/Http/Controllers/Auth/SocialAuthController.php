@@ -35,7 +35,8 @@ class SocialAuthController extends Controller
       ]);
     } else {
       $user = User::create([
-        'name' => $socialUser->nickname ?? $socialUser->name,
+        'name' => $socialUser->name,
+        'username' => $socialUser->nickname,
         'email' => $socialUser->email,
         'is_social' => true,
         "{$provider}_id" => $socialUser->id,

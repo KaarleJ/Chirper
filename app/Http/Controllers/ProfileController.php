@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AccountDeletionMail;
+use Illuminate\Support\Facades\URL;
 
 class ProfileController extends Controller
 {
@@ -59,5 +63,30 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function requestDelete()
+    {
+        $user = Auth::user();
+
+        // Generate a signed URL for account deletion
+        $deletionUrl = URL::temporarySignedRoute(
+            'profile.confirmDelete',
+            now()->addMinutes(30),
+            ['userId' => $user->id]
+        );
+
+        // Send the confirmation email
+        Mail::to($user->email)->send(new AccountDeletionMail($deletionUrl));
+
+        return back()->with('status', 'A confirmation link has been sent to your email.');
+    }
+
+    public function confirmDelete($userId)
+    {
+        $user = User::where('id', $userId)->first();
+        $user->delete();
+
+        return redirect('/')->with('status', 'Your account has been successfully deleted.');
     }
 }

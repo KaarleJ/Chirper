@@ -21,14 +21,8 @@ export default function SideNav() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavLink href={route("dashboard")}>
+            <NavLink href={route("home")}>
               <House size={24} /> Home
-            </NavLink>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <NavLink href={route("chirps.index")}>
-              <Bell size={24} /> Chirps
             </NavLink>
           </NavigationMenuItem>
 
