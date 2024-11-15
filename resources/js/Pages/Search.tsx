@@ -18,19 +18,22 @@ export default function Search() {
   console.log(strategy);
 
   const { data, setData, get } = useForm({
-    query: query as string,
-    strategy: strategy as string,
+    query: (query as string | undefined) || "",
+    strategy: (strategy as string | undefined) || "",
   });
 
   function submit(e?: FormEvent) {
     e?.preventDefault();
-    console.log("submitting", query, strategy);
+    console.log("submitting", data.query, data.strategy);
     get(route("search.index"));
   }
 
-  function changeStrategy(strategy: "people" | "chirps") {
-    setData("strategy", strategy);
-    submit();
+  function changeStrategy(e?: FormEvent) {
+    const newStrategy = strategy === "people" ? "chirps" : "people";
+    setData("strategy", newStrategy);
+    get(route("search.index", { strategy: newStrategy }), {
+      preserveState: true,
+    });
   }
 
   const resultsData = results as SearchResults<"people" | "chirps">;
@@ -40,38 +43,41 @@ export default function Search() {
       <Head title="Search" />
 
       <Header title="Search" className="border-b-0 pb-4" />
-      <form className="border-b" onSubmit={submit}>
-        <div className="px-8 py-4 w-[25rem] flex gap-2">
-          <Input
-            className="rounded-full pl-4 w-full"
-            placeholder="search"
-            value={data.query}
-            onChange={(e) => setData("query", e.target.value)}
-          />
-        </div>
-        <div className="flex px-4 gap-4">
-          <Button
-            className={cn(
-              "text-lg relative",
-              strategy === "people" && underline
-            )}
-            variant="ghost"
-            onClick={() => changeStrategy("people")}
-          >
-            People
-          </Button>
-          <Button
-            className={cn(
-              "text-lg relative",
-              strategy === "chirps" && underline
-            )}
-            variant="ghost"
-            onClick={() => changeStrategy("chirps")}
-          >
-            Chirps
-          </Button>
-        </div>
-      </form>
+      <div className="border-b">
+        <form onSubmit={submit}>
+          <div className="px-8 py-4 w-[25rem] flex gap-2">
+            <Input
+              className="rounded-full pl-4 w-full"
+              placeholder="search"
+              value={data.query}
+              onChange={(e) => setData("query", e.target.value)}
+            />
+          </div>
+        </form>
+        <form onSubmit={changeStrategy}>
+          <input type="hidden" name="strategy" value={data.strategy} />
+          <div className="flex px-4 gap-4">
+            <Button
+              className={cn(
+                "text-lg relative",
+                strategy === "people" && underline
+              )}
+              variant="ghost"
+            >
+              People
+            </Button>
+            <Button
+              className={cn(
+                "text-lg relative",
+                strategy === "chirps" && underline
+              )}
+              variant="ghost"
+            >
+              Chirps
+            </Button>
+          </div>
+        </form>
+      </div>
 
       {strategy === "people"
         ? (resultsData as User[]).map((user) => (
