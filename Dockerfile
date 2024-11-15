@@ -55,8 +55,8 @@ COPY --from=node /var/www/html/public/css /var/www/html/public/css
 RUN php artisan package:discover
 
 # Copy configuration files
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/supervisord.conf /etc/supervisord.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 # Set permissions
 RUN adduser -D -u 1000 www
