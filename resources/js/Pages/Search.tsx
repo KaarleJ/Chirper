@@ -15,7 +15,6 @@ type SearchResults<T extends "people" | "chirps"> = T extends "people"
 
 export default function Search() {
   const { results, query, strategy } = usePage().props;
-  console.log(strategy);
 
   const { data, setData, get } = useForm({
     query: (query as string | undefined) || "",
@@ -24,7 +23,6 @@ export default function Search() {
 
   function submit(e?: FormEvent) {
     e?.preventDefault();
-    console.log("submitting", data.query, data.strategy);
     get(route("search.index"));
   }
 
