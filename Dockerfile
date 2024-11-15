@@ -10,7 +10,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 # Stage 2: Node.js Dependencies and Build
-FROM node:16-alpine AS node
+FROM node:20-alpine AS node
 
 WORKDIR /var/www/html
 
@@ -49,6 +49,9 @@ COPY --from=composer /var/www/html/vendor /var/www/html/vendor
 
 # Copy built assets
 COPY --from=node /var/www/html/public/build /var/www/html/public/build
+
+# Configure PHP-FPM to listen on TCP socket
+RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
 
 # Run Laravel post-install scripts
 RUN php artisan package:discover
