@@ -1,18 +1,29 @@
-
 # Stage 1: Composer Dependencies
 FROM composer:2 AS composer
 
 WORKDIR /var/www/html
+
+# Copy composer files
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+# Install dependencies without running post-install scripts
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 # Stage 2: Node.js Dependencies and Build
 FROM node:16-alpine AS node
 
 WORKDIR /var/www/html
+
+# Copy package files
 COPY package.json package-lock.json ./
+
+# Install dependencies
 RUN npm ci
+
+# Copy all files
 COPY . .
+
+# Build assets for production
 RUN npm run build
 
 # Stage 3: Production Image
@@ -40,9 +51,12 @@ COPY --from=composer /var/www/html/vendor /var/www/html/vendor
 COPY --from=node /var/www/html/public/js /var/www/html/public/js
 COPY --from=node /var/www/html/public/css /var/www/html/public/css
 
+# Run Laravel post-install scripts
+RUN php artisan package:discover
+
 # Copy configuration files
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY supervisord.conf /etc/supervisord.conf
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /etc/supervisord.conf
 
 # Set permissions
 RUN adduser -D -u 1000 www
