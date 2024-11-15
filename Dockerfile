@@ -9,7 +9,7 @@ RUN apt-get update && \
     git \
     nodejs \
     npm && \
-    docker-php-ext-install pdo_mysql zip
+    docker-php-ext-install pdo_pgsql zip
 
 # Enable mod_rewrite
 RUN a2enmod rewrite
