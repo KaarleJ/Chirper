@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class MessageController extends Controller
 {
@@ -25,7 +26,10 @@ class MessageController extends Controller
 
         $messages = $chat->messages()->orderBy('created_at', 'asc')->get();
 
-        return response()->json($messages);
+        return Inertia::render('Messages/Index', [
+            'chat' => $chat,
+            'messages' => $messages,
+        ]);
     }
 
     /**

@@ -1,7 +1,7 @@
 import ApplicationLogo from "./ApplicationLogo";
 import NavLink from "./NavLink";
 import { User } from "lucide-react";
-import { House, Bell } from "lucide-react";
+import { House, Mail } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -30,6 +30,13 @@ export default function SideNav() {
             <NavLink href={route("profile.edit")}>
               <User />
               Profile
+            </NavLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavLink href={route("chats.index")}>
+              <Mail />
+              Chats
             </NavLink>
           </NavigationMenuItem>
 

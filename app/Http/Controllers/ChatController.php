@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ChatController extends Controller
 {
@@ -27,7 +28,9 @@ class ChatController extends Controller
             ])
             ->get();
 
-        return response()->json($chats);
+        return Inertia::render('Chats/Index', [
+            'chats' => $chats,
+        ]);
     }
 
     /**
