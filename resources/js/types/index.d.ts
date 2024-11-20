@@ -24,3 +24,17 @@ export type PageProps<
     user: User;
   };
 };
+
+interface Chat {
+  userOne: number,
+  userTwo: number,
+  messages: Message[],
+}
+
+interface Message {
+  chat_id: number,
+  sender_id: number,
+  content: string,
+  created_at: string,
+  updated_at: string,
+}
