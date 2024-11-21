@@ -26,8 +26,9 @@ export type PageProps<
 };
 
 interface Chat {
-  userOne: number,
-  userTwo: number,
+  id: number,
+  user_one: User,
+  user_two: User,
   messages: Message[],
 }
 
