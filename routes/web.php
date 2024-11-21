@@ -49,7 +49,7 @@ Route::resource('chirps', ChirpController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('chats', ChatController::class)
-    ->only(['index', 'store'])
+    ->only(['index', 'show', 'store'])
     ->middleware(['auth', 'verified']);
 
 Route::resource('messages', ChatController::class)
