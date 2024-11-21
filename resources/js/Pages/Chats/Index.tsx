@@ -1,29 +1,40 @@
 import Header from "@/Components/Header";
-import { Button } from "@/Components/ui/button";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Chat } from "@/types";
+import { Chat, Message, PageProps, User } from "@/types";
 import { Head } from "@inertiajs/react";
-import { MailPlus as NewMessage } from "lucide-react";
+import CreateChatDialog from "@/Components/CreateChatDialog";
+import ChatCard from "@/Components/ChatCard";
 
-export default function Chats(/*{ chats }: { chats: Chat }*/) {
-  const chats: Chat[] = [
-    {
-      userOne: 1,
-      userTwo: 2,
-      messages: [],
-    },
-  ];
+export default function Chats({
+  follows,
+  chats,
+  auth,
+  currentChat,
+}: PageProps & {
+  follows: User[];
+  chats: Chat[];
+  messages: Message[];
+  currentChat?: Chat;
+}) {
+  console.log(chats);
   return (
     <AuthenticatedLayout>
       <Head title="Chats" />
       <div className="flex items-center justify-between border-b">
         <Header title="Chats" className="border-b-0" />
-        <Button className="mr-12 rounded-full p-2" size="icon">
-          <NewMessage />
-        </Button>
+        <CreateChatDialog follows={follows} />
       </div>
 
-      <div className="py-12">Chats</div>
+      <div>
+        {chats.map((chat) => (
+          <ChatCard
+            key={chat.id}
+            chat={chat}
+            auth={auth}
+            selected={currentChat?.id === chat.id}
+          />
+        ))}
+      </div>
     </AuthenticatedLayout>
   );
 }
