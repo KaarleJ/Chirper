@@ -15,10 +15,14 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $userId = Auth::user()->id;
+        $user = User::find(Auth::user()->id);
 
-        $chats = Chat::where('user_one_id', $userId)
-            ->orWhere('user_two_id', $userId)
+        $follows = User::whereHas('followers', function ($query) use ($user) {
+            $query->where('follower_id', $user->id);
+        })->get();
+
+        $chats = Chat::where('user_one_id', $user->id)
+            ->orWhere('user_two_id', $user->id)
             ->with([
                 'userOne',
                 'userTwo',
@@ -30,6 +34,43 @@ class ChatController extends Controller
 
         return Inertia::render('Chats/Index', [
             'chats' => $chats,
+            'follows' => $follows,
+        ]);
+    }
+
+    /**
+     * Display messages for a specific chat.
+     */
+    public function show(Chat $chat)
+    {
+        $userId = Auth::user()->id;
+
+        if ($chat->user_one_id !== $userId && $chat->user_two_id !== $userId) {
+            abort(403, 'Unauthorized access to this chat.');
+        }
+
+        $messages = $chat->messages()->orderBy('created_at', 'asc')->get();
+
+        $chats = Chat::with([
+            'userOne',
+            'userTwo',
+            'messages' => function ($query) {
+                $query->latest()->first();
+            }
+        ])
+            ->where('user_one_id', $userId)
+            ->orWhere('user_two_id', $userId)
+            ->get();
+
+        $followings = User::whereHas('followers', function ($query) use ($userId) {
+            $query->where('follower_id', $userId);
+        })->get();
+
+        return inertia('Chats/Index', [
+            'chats' => $chats,
+            'follows' => $followings,
+            'messages' => $messages,
+            'currentChat' => $chat,
         ]);
     }
 
@@ -42,16 +83,16 @@ class ChatController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $user = User::where('id', Auth::user()->id);
+        $user = User::find(Auth::user()->id);
         $otherUserId = $request->user_id;
 
-        $chat = Chat::firstOrCreate(
+        Chat::firstOrCreate(
             [
                 'user_one_id' => min($user->id, $otherUserId),
                 'user_two_id' => max($user->id, $otherUserId),
             ]
         );
 
-        return response()->json($chat);
+        return redirect(route('chats.index'));
     }
 }
