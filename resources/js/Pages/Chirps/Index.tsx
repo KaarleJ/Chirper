@@ -22,9 +22,9 @@ export default function Index({
 
   return (
     <AuthenticatedLayout>
-      <Head title="Chirps" />
+      <Head title="Home" />
 
-      <Header title="Chirps" />
+      <Header title="Home" />
       <div className="w-full">
         <form onSubmit={submit} className="p-8 border-b">
           <textarea
