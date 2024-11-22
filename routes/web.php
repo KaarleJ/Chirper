@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/{user}/follow', [FollowController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user}/unfollow', [FollowController::class, 'unfollow'])->name('profile.unfollow');
+
+    Route::post('/chats/{chat}/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/profile/confirm-delete/{userId}', [ProfileController::class, 'confirmDelete'])->middleware('signed')->name('profile.confirmDelete');
@@ -50,10 +52,6 @@ Route::resource('chirps', ChirpController::class)
 
 Route::resource('chats', ChatController::class)
     ->only(['index', 'show', 'store'])
-    ->middleware(['auth', 'verified']);
-
-Route::resource('messages', ChatController::class)
-    ->only(['index', 'store'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__ . '/auth.php';
