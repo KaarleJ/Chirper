@@ -6,7 +6,7 @@ import { Input } from "@/Components/ui/input";
 import { FormEvent } from "react";
 import { cn } from "@/lib/utils";
 import { Chirp, User } from "@/types";
-import UserCard from "@/Components/UserCard";
+import { UserCardLink} from "@/Components/UserCard";
 import ChirpCard from "@/Components/ChirpCard";
 
 type SearchResults<T extends "people" | "chirps"> = T extends "people"
@@ -79,7 +79,7 @@ export default function Search() {
 
       {strategy === "people"
         ? (resultsData as User[]).map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCardLink key={user.id} user={user} />
           ))
         : (resultsData as Chirp[]).map((chirp) => (
             <ChirpCard key={chirp.id} chirp={chirp} />

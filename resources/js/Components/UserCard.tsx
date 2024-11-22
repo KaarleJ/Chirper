@@ -2,31 +2,34 @@ import { User } from "@/types";
 import { UserRound as UserIcon } from "lucide-react";
 import { Link } from "@inertiajs/react";
 
-export default function UserCard({ user }: { user: User }) {
-  const profilePicture = user.profile_picture;
+export function UserCard({ user }: { user: User }) {
+  return (
+    <div className="flex">
+      {user.profile_picture ? (
+        <img
+          src={user.profile_picture}
+          alt="Profile Picture"
+          className="w-10 h-10 rounded-full"
+        />
+      ) : (
+        <UserIcon />
+      )}
+      <div className="flex flex-col items-start">
+        <p className="text-lg px-2">{user.name}</p>
+        <p className="text-sm px-2 text-gray-500 font-thin">@{user.username}</p>
+      </div>
+    </div>
+  );
+}
+
+export function UserCardLink({ user }: { user: User }) {
 
   return (
     <Link
       href={`/profile/${user.id}`}
       className="flex px-8 py-4 justify-between hover:bg-accent transition-all"
     >
-      <div className="flex">
-        {profilePicture ? (
-          <img
-            src={profilePicture}
-            alt="Profile Picture"
-            className="w-10 h-10 rounded-full"
-          />
-        ) : (
-          <UserIcon />
-        )}
-        <div className="flex flex-col items-start">
-          <p className="text-lg px-2">{user.name}</p>
-          <p className="text-sm px-2 text-gray-500 font-thin">
-            @{user.username}
-          </p>
-        </div>
-      </div>
+      <UserCard user={user} />
 
       {user.is_following ? (
         <Link
