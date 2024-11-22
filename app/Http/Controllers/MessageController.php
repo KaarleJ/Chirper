@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class MessageController extends Controller
@@ -15,7 +16,7 @@ class MessageController extends Controller
      */
     public function index($chatId)
     {
-        $user = User::where('id', Auth::user()->id);
+        $user = User::find(Auth::user()->id);
 
         $chat = Chat::where('id', $chatId)
             ->where(function ($query) use ($user) {
@@ -41,7 +42,7 @@ class MessageController extends Controller
             'content' => 'required|string|max:1000',
         ]);
 
-        $user = User::where('id', Auth::user()->id);
+        $user = User::find(Auth::user()->id);
 
         $chat = Chat::where('id', $chatId)
             ->where(function ($query) use ($user) {
@@ -50,11 +51,11 @@ class MessageController extends Controller
             })
             ->firstOrFail();
 
-        $message = $chat->messages()->create([
+        $chat->messages()->create([
             'sender_id' => $user->id,
             'content' => $request->content,
         ]);
 
-        return response()->json($message, 201);
+        return redirect()->route('chats.show', ['chat' => $chat->id]);
     }
 }
