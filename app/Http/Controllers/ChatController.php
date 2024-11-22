@@ -49,6 +49,8 @@ class ChatController extends Controller
             abort(403, 'Unauthorized access to this chat.');
         }
 
+        $chat->load(['userOne', 'userTwo']);
+
         $messages = $chat->messages()->orderBy('created_at', 'asc')->get();
 
         $chats = Chat::with([

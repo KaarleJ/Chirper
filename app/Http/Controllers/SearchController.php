@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Chirp;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
@@ -15,8 +14,6 @@ class SearchController extends Controller
     $query = $request->input('query');
     $strategy = $request->input('strategy', 'people');
     $authUser = Auth::user();
-
-    Log::info('Received strategy: ' . $strategy);
 
     $results = $strategy === 'people'
       ? User::where('name', 'ilike', "%{$query}%")
