@@ -1,18 +1,21 @@
-import { MailPlus as NewMessage, UserIcon } from "lucide-react";
+import { UserIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
 import { User } from "@/types";
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { Separator } from "@/Components/ui/separator";
 import { Input } from "./ui/input";
 import { Link } from "@inertiajs/react";
 
-export default function CreateChatDialog({ follows }: { follows: User[] }) {
+export default function CreateChatDialog({
+  follows,
+  children,
+}: PropsWithChildren & { follows: User[] }) {
+  const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
 
   const followings = follows.filter((follow) =>
@@ -20,12 +23,8 @@ export default function CreateChatDialog({ follows }: { follows: User[] }) {
   );
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="mr-12 rounded-full p-2" size="icon">
-          <NewMessage />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={() => setOpen(!open)}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <div className="flex flex-col gap-2">
           <DialogTitle>Create a new chat</DialogTitle>
@@ -45,6 +44,7 @@ export default function CreateChatDialog({ follows }: { follows: User[] }) {
                 key={follow.id}
                 as="button"
                 className="flex w-full px-2 py-2 justify-between hover:bg-accent transition-all rounded-md"
+                onClick={() => setOpen(false)}
               >
                 <div className="flex">
                   {follow.profile_picture ? (
