@@ -51,7 +51,7 @@ class ChatController extends Controller
 
         $chat->load(['userOne', 'userTwo']);
 
-        $messages = $chat->messages()->orderBy('created_at', 'asc')->get();
+        $messages = $chat->messages()->orderBy('created_at', 'desc')->get();
 
         $chats = Chat::with([
             'userOne',
