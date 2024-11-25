@@ -41,12 +41,12 @@ export default function ChatScreen({
   }
 
   return (
-    <div className="h-full flex flex-col justify-start">
-      <div className="h-[6.5rem] border-b flex items-center px-4">
+    <div className="max-h-screen h-screen flex flex-col justify-start">
+      <div className="h-[5.8rem] border-b flex items-center px-4">
         <UserCard user={chatPartner} />
       </div>
-      <div className="p-4 relative h-full">
-        <div className="flex flex-col gap-4">
+      <div className="p-4 flex flex-col justify-between items-stretch">
+        <div className="flex flex-col-reverse h-[44rem] overflow-y-auto">
           {messages?.map((message) => (
             <Message
               key={message.chat_id + message.sender_id + message.created_at}
@@ -58,14 +58,14 @@ export default function ChatScreen({
         </div>
         <form
           onSubmit={submit}
-          className="absolute bottom-10 left-0 p-4 w-full flex gap-2"
+          className="p-4 flex gap-2"
         >
           <Input
             type="text"
             value={data.content}
             onChange={(e) => setData("content", e.target.value)}
             placeholder="Type a message..."
-            className="w-full p-2 border rounded-lg h-"
+            className="w-full p-2 border rounded-lg"
           />
           <Button type="submit" className="rounded-lg pl-4 pr-5 flex">
             <Send />
