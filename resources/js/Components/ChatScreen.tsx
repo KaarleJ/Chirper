@@ -46,7 +46,7 @@ export default function ChatScreen({
         <UserCard user={chatPartner} />
       </div>
       <div className="p-4 flex flex-col justify-between items-stretch">
-        <div className="flex flex-col-reverse h-[44rem] overflow-y-auto">
+        <div className="flex flex-col-reverse h-[44rem] 4xl:h-[65rem] overflow-y-auto">
           {messages?.map((message) => (
             <Message
               key={message.chat_id + message.sender_id + message.created_at}
