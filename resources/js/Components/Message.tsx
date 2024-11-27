@@ -5,11 +5,9 @@ import { format } from "date-fns";
 export default function Message({
   message,
   auth,
-  chatPartner,
 }: {
   message: MessageType;
   auth: { user: User };
-  chatPartner: User;
 }) {
   const isSender = message.sender_id === auth.user.id;
   return (
