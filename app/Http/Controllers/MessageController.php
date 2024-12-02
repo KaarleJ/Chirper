@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use App\Events\GotMessage;
 
 class MessageController extends Controller
 {
@@ -55,6 +55,8 @@ class MessageController extends Controller
             'sender_id' => $user->id,
             'content' => $request->content,
         ]);
+
+        broadcast(new GotMessage($chat->messages()->latest()->first(), $user))->toOthers();
 
         return redirect()->route('chats.show', ['chat' => $chat->id]);
     }
