@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { getFormattedDate, resolveChatPartner } from "@/lib/utils";
 import { UserCard } from "./UserCard";
 import Message from "./Message";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Send } from "lucide-react";
 
@@ -18,15 +18,34 @@ export default function ChatScreen({
   messages?: MessageType[];
   auth: { user: User };
 }) {
+  const [updatedMessages, setMessages] = useState<MessageType[] | undefined>(
+    messages
+  );
   const { props } = usePage();
+
   const { data, setData, post, clearErrors, reset, errors } = useForm({
     content: "",
   });
+
   const follows = props.follows as User[];
 
   if (!chat) {
     return NoChat(follows);
   }
+
+  useEffect(() => {
+    if (chat) {
+      const channel = window.Echo.private(`chat${chat.id}`);
+      channel.listen("GotMessage", (e: { message: MessageType }) => {
+        setMessages((prevMessages) => [e.message, ...(prevMessages || [])]);
+      });
+
+      return () => {
+        channel.stopListening("GotMessage");
+        window.Echo.leave(`chat${chat.id}`);
+      };
+    }
+  }, [chat]);
 
   const chatPartner = resolveChatPartner(auth, chat);
 
@@ -40,7 +59,7 @@ export default function ChatScreen({
     });
   }
 
-  const groupedMessages = messages?.reduce((acc, message) => {
+  const groupedMessages = updatedMessages?.reduce((acc, message) => {
     const messageDate = getFormattedDate(message.created_at);
     if (!acc[messageDate]) {
       acc[messageDate] = [];
