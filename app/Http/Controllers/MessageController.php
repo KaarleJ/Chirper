@@ -57,7 +57,5 @@ class MessageController extends Controller
         ]);
 
         broadcast(new GotMessage($chat->messages()->latest()->first(), $user))->toOthers();
-
-        return redirect()->route('chats.show', ['chat' => $chat->id]);
     }
 }
