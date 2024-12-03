@@ -25,7 +25,11 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t registry.fly.io/${{ secrets.FLY_APP_NAME }}:latest .
+          docker build \
+            --build-arg VITE_PUSHER_KEY=${{ secrets.VITE_PUSHER_KEY }} \
+            --build-arg VITE_PUSHER_CLUSTER=${{ secrets.VITE_PUSHER_CLUSTER }} \
+            --build-arg VITE_APP_NAME=${{ secrets.VITE_APP_NAME }} \
+            -t registry.fly.io/${{ secrets.FLY_APP_NAME }}:latest .
           docker push registry.fly.io/${{ secrets.FLY_APP_NAME }}:latest
 
       - name: Set up Fly.io
