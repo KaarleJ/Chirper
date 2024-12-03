@@ -7,6 +7,7 @@ import ChatCard from "@/Components/ChatCard";
 import ChatScreen from "@/Components/ChatScreen";
 import { Button } from "@/Components/ui/button";
 import { MailPlus as NewMessage } from "lucide-react";
+import useLiveChats from "@/hooks/useLiveChats";
 
 export default function Chats({
   follows,
@@ -20,6 +21,7 @@ export default function Chats({
   messages: Message[];
   currentChat?: Chat;
 }) {
+  const { unreadChats, liveChats } = useLiveChats({ auth, chat: currentChat, initialChats: chats });
   return (
     <AuthenticatedLayout hideSearch className="border-r">
       <Head title="Chats" />
@@ -35,12 +37,15 @@ export default function Chats({
           </div>
 
           <div className="h-full">
-            {chats.map((chat) => (
+            {liveChats.map((chat) => (
               <ChatCard
                 key={chat.id}
                 chat={chat}
                 auth={auth}
                 selected={currentChat?.id === chat.id}
+                hasNewMessages={
+                  unreadChats[chat.id] && currentChat?.id !== chat.id
+                }
               />
             ))}
           </div>

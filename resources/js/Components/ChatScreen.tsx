@@ -2,12 +2,13 @@ import { Chat, Message as MessageType, User } from "@/types";
 import CreateChatDialog from "./CreateChatDialog";
 import { useForm, usePage } from "@inertiajs/react";
 import { Button } from "./ui/button";
-import { getFormattedDate, resolveChatPartner } from "@/lib/utils";
+import { resolveChatPartner } from "@/lib/utils";
 import { UserCard } from "./UserCard";
 import Message from "./Message";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
 import { Input } from "./ui/input";
 import { Send } from "lucide-react";
+import useLiveChat from "@/hooks/useLiveChat";
 
 export default function ChatScreen({
   chat,
@@ -15,12 +16,10 @@ export default function ChatScreen({
   auth,
 }: {
   chat?: Chat;
-  messages?: MessageType[];
+  messages: MessageType[];
   auth: { user: User };
 }) {
-  const [updatedMessages, setMessages] = useState<MessageType[] | undefined>(
-    messages
-  );
+  const { groupedMessages } = useLiveChat({ messages, chat });
   const { props } = usePage();
 
   const { data, setData, post, clearErrors, reset, errors } = useForm({
@@ -33,20 +32,6 @@ export default function ChatScreen({
     return NoChat(follows);
   }
 
-  useEffect(() => {
-    if (chat) {
-      const channel = window.Echo.private(`chat${chat.id}`);
-      channel.listen("GotMessage", (e: { message: MessageType }) => {
-        setMessages((prevMessages) => [e.message, ...(prevMessages || [])]);
-      });
-
-      return () => {
-        channel.stopListening("GotMessage");
-        window.Echo.leave(`chat${chat.id}`);
-      };
-    }
-  }, [chat]);
-
   const chatPartner = resolveChatPartner(auth, chat);
 
   function submit(e: FormEvent) {
@@ -58,15 +43,6 @@ export default function ChatScreen({
       },
     });
   }
-
-  const groupedMessages = updatedMessages?.reduce((acc, message) => {
-    const messageDate = getFormattedDate(message.created_at);
-    if (!acc[messageDate]) {
-      acc[messageDate] = [];
-    }
-    acc[messageDate].push(message);
-    return acc;
-  }, {} as Record<string, MessageType[]>);
 
   return (
     <div className="max-h-screen h-screen flex flex-col justify-start">

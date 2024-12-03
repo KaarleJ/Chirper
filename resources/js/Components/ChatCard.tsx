@@ -8,7 +8,8 @@ export default function ChatCard({
   auth,
   chat,
   selected,
-}: PageProps & { chat: Chat; selected: boolean }) {
+  hasNewMessages,
+}: PageProps & { chat: Chat; selected: boolean; hasNewMessages: boolean }) {
   const chatPartner = resolveChatPartner(auth, chat);
   const message = chat.messages[0]?.content;
   return (
@@ -20,6 +21,7 @@ export default function ChatCard({
       <p className="self-end px-4 overflow-hidden truncate opacity-50 max-w-[20rem]">
         {message}
       </p>
+      {hasNewMessages && <div className="bg-primary h-7 w-8 rounded-full self-center" />}
     </Link>
   );
 }
