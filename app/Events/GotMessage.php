@@ -9,16 +9,17 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Chat;
 
 class GotMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public Message $message;
 
-    public $user;
+    public User $user;
 
-    public $chatId;
+    public Chat $chat;
 
     /**
      * Create a new event instance.
@@ -27,7 +28,7 @@ class GotMessage implements ShouldBroadcast
     {
         $this->message = $message;
         $this->user = $user;
-        $this->chatId = $message->chat_id;
+        $this->chat = $message->chat;
     }
 
     /**
@@ -37,8 +38,18 @@ class GotMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        $receiver = $this->chat->userTwo->id === $this->user->id ? $this->chat->userOne : $this->chat->userTwo;
+
         return [
-            new PrivateChannel('chat' . $this->chatId),
+            new PrivateChannel('chat' . $this->chat->id),
+            new PrivateChannel('user' . $receiver->id),
+        ];
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->message->load('sender'),
         ];
     }
 }
