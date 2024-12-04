@@ -30,6 +30,12 @@ class ChatController extends Controller
                     $query->latest()->first();
                 }
             ])
+            ->withCount([
+                'messages as unread_count' => function ($query) use ($user) {
+                    $query->where('sender_id', '!=', $user->id)
+                        ->whereNull('read_at');
+                }
+            ])
             ->get();
 
         return Inertia::render('Chats/Index', [
@@ -96,5 +102,17 @@ class ChatController extends Controller
         );
 
         return redirect(route('chats.index'));
+    }
+
+    public function markAsRead(Chat $chat)
+    {
+        $userId = Auth::id();
+
+        $chat->messages()
+            ->where('sender_id', '!=', $userId)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return response()->json(['status' => 'success']);
     }
 }

@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/{user}/unfollow', [FollowController::class, 'unfollow'])->name('profile.unfollow');
 
     Route::post('/chats/{chat}/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::post('/chats/{chat}/mark-as-read', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
 });
 
 Route::get('/profile/confirm-delete/{userId}', [ProfileController::class, 'confirmDelete'])->middleware('signed')->name('profile.confirmDelete');
