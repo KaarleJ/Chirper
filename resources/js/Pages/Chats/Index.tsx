@@ -21,7 +21,11 @@ export default function Chats({
   messages: Message[];
   currentChat?: Chat;
 }) {
-  const { unreadChats, liveChats } = useLiveChats({ auth, chat: currentChat, initialChats: chats });
+  const { liveChats } = useLiveChats({
+    auth,
+    chat: currentChat,
+    initialChats: chats,
+  });
   return (
     <AuthenticatedLayout hideSearch className="border-r">
       <Head title="Chats" />
@@ -43,9 +47,6 @@ export default function Chats({
                 chat={chat}
                 auth={auth}
                 selected={currentChat?.id === chat.id}
-                hasNewMessages={
-                  unreadChats[chat.id] && currentChat?.id !== chat.id
-                }
               />
             ))}
           </div>

@@ -25,6 +25,15 @@ export default function useLiveChat({
     }
   }, [chat]);
 
+  useEffect(() => {
+    if (chat) {
+      const unreadMessages = messages.filter((message) => !message.read_at);
+      if (unreadMessages.length > 0) {
+        window.axios.post(`/chats/${chat.id}/mark-as-read`);
+      }
+    }
+  }, [chat, messages]);
+
   const groupedMessages = updatedMessages?.reduce((acc, message) => {
     const messageDate = getFormattedDate(message.created_at);
     if (!acc[messageDate]) {

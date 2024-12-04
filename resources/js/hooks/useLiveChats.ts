@@ -7,7 +7,6 @@ export default function useLiveChats({
   initialChats,
 }: PageProps & { chat?: Chat; initialChats: Chat[] }) {
   const [liveChats, setLiveChats] = useState(initialChats);
-  const [unreadChats, setUnreadChats] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const userChannel = window.Echo.private(`user${auth.user.id}`);
@@ -22,16 +21,12 @@ export default function useLiveChats({
             return {
               ...chat,
               messages: [newMessage, ...chat.messages],
+              unread_count: chat.unread_count ? chat.unread_count + 1 : 1,
             };
           }
           return chat;
         });
       });
-
-      setUnreadChats((prev) => ({
-        ...prev,
-        [chatId]: true,
-      }));
     });
 
     return () => {
@@ -40,15 +35,5 @@ export default function useLiveChats({
     };
   }, [auth.user.id]);
 
-  useEffect(() => {
-    if (chat) {
-      setUnreadChats((prev) => {
-        const updated = { ...prev };
-        delete updated[chat.id];
-        return updated;
-      });
-    }
-  }, [chat]);
-
-  return { unreadChats, liveChats };
+  return { liveChats };
 }
