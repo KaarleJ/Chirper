@@ -26,16 +26,18 @@ export type PageProps<
 };
 
 interface Chat {
-  id: number,
-  user_one: User,
-  user_two: User,
-  messages: Message[],
+  id: number;
+  user_one: User;
+  user_two: User;
+  unread_count?: number;
+  messages: Message[];
 }
 
 interface Message {
-  chat_id: number,
-  sender_id: number,
-  content: string,
-  created_at: string,
-  updated_at: string,
+  chat_id: number;
+  sender_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  read_at: string;
 }
