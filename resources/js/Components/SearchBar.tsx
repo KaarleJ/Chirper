@@ -38,7 +38,6 @@ export default function SearchBar() {
           </Button>
         </form>
       )}
-      <div className="w-[20rem]">Lorem Ipsum</div>
     </div>
   );
 }

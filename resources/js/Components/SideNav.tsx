@@ -1,7 +1,6 @@
 import ApplicationLogo from "./ApplicationLogo";
 import NavLink from "./NavLink";
-import { User } from "lucide-react";
-import { House, Mail } from "lucide-react";
+import { House, Mail, User } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuItem,

@@ -7,7 +7,7 @@ import {
 } from "./ui/dropdown-menu";
 import { UserRound as User } from "lucide-react";
 
-export default function ProfileMenu() {
+export default function ProfileMenu({ mobile }: { mobile?: boolean }) {
   const { auth } = usePage().props;
   const profilePicture = auth.user.profile_picture;
   return (
@@ -22,17 +22,19 @@ export default function ProfileMenu() {
         ) : (
           <User />
         )}
-        <div className="flex flex-col items-start">
-          <p className="text-lg px-2">{auth.user.name}</p>
-          <p className="text-sm px-2 text-gray-500 font-thin">
-            @{auth.user.username}
-          </p>
-        </div>
+        {!mobile && (
+          <div className="flex flex-col items-start">
+            <p className="text-lg px-2">{auth.user.name}</p>
+            <p className="text-sm px-2 text-gray-500 font-thin">
+              @{auth.user.username}
+            </p>
+          </div>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side="top"
         align="start"
-        alignOffset={36}
+        alignOffset={mobile ? 0 : 36}
         className="rounded-lg"
       >
         <DropdownMenuItem>

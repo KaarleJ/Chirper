@@ -7,7 +7,7 @@ export default function ChatCard({
   auth,
   chat,
   selected,
-}: PageProps & { chat: Chat; selected: boolean }) {
+}: PageProps & { chat: Chat; selected?: boolean }) {
   const chatPartner = resolveChatPartner(auth, chat);
   const message = chat.messages[0]?.content;
   const unread = chat.unread_count || 0;

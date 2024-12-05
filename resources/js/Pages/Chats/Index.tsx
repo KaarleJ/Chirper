@@ -8,6 +8,7 @@ import ChatScreen from "@/Components/ChatScreen";
 import { Button } from "@/Components/ui/button";
 import { MailPlus as NewMessage } from "lucide-react";
 import useLiveChats from "@/hooks/useLiveChats";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function Chats({
   follows,
@@ -26,6 +27,29 @@ export default function Chats({
     chat: currentChat,
     initialChats: chats,
   });
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  if (!isDesktop) {
+    if (currentChat) {
+      return (
+        <AuthenticatedLayout className="border-r">
+          <Head title="Chats" />
+          <Header title="Chats" />
+          <ChatScreen chat={currentChat} auth={auth} messages={messages} />
+        </AuthenticatedLayout>
+      );
+    }
+    return (
+      <AuthenticatedLayout className="border-r">
+        <Head title="Chats" />
+        <Header title="Chats" />
+        <div className="h-full">
+          {liveChats.map((chat) => (
+            <ChatCard key={chat.id} chat={chat} auth={auth} />
+          ))}
+        </div>
+      </AuthenticatedLayout>
+    );
+  }
   return (
     <AuthenticatedLayout hideSearch className="border-r">
       <Head title="Chats" />

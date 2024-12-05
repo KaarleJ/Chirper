@@ -45,12 +45,12 @@ export default function ChatScreen({
   }
 
   return (
-    <div className="max-h-screen h-screen flex flex-col justify-start">
+    <div className="max-h-screen flex flex-col justify-start">
       <div className="h-[5.8rem] border-b flex items-center px-4">
         <UserCard user={chatPartner} />
       </div>
       <div className="p-4 flex flex-col justify-between items-stretch">
-        <div className="flex flex-col-reverse h-[44rem] 4xl:h-[65rem] overflow-y-auto">
+        <div className="flex flex-col-reverse h-[28rem] overflow-y-auto">
           {groupedMessages &&
             Object.entries(groupedMessages).map(([date, messages]) => (
               <div key={date} className="flex flex-col-reverse">
