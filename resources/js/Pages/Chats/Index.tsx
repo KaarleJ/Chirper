@@ -31,17 +31,15 @@ export default function Chats({
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   function Children() {
-    if (currentChat) {
-      return <ChatScreen chat={currentChat} auth={auth} messages={messages} />;
-    } else if (!isDesktop) {
-      return (
-        <div className="h-full">
-          {liveChats.map((chat) => (
-            <ChatCard key={chat.id} chat={chat} auth={auth} />
-          ))}
-        </div>
-      );
-    }
+    return !currentChat && !isDesktop ? (
+      <div className="h-full">
+        {liveChats.map((chat) => (
+          <ChatCard key={chat.id} chat={chat} auth={auth} />
+        ))}
+      </div>
+    ) : (
+      <ChatScreen chat={currentChat} auth={auth} messages={messages} />
+    );
   }
 
   return (
