@@ -9,6 +9,7 @@ import { Button } from "@/Components/ui/button";
 import { MailPlus as NewMessage } from "lucide-react";
 import useLiveChats from "@/hooks/useLiveChats";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import ChatsLayout from "@/Layouts/ChatsLayout";
 
 export default function Chats({
   follows,
@@ -28,58 +29,29 @@ export default function Chats({
     initialChats: chats,
   });
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  if (!isDesktop) {
+
+  function Children() {
     if (currentChat) {
+      return <ChatScreen chat={currentChat} auth={auth} messages={messages} />;
+    } else if (!isDesktop) {
       return (
-        <AuthenticatedLayout className="border-r">
-          <Head title="Chats" />
-          <Header title="Chats" />
-          <ChatScreen chat={currentChat} auth={auth} messages={messages} />
-        </AuthenticatedLayout>
-      );
-    }
-    return (
-      <AuthenticatedLayout className="border-r">
-        <Head title="Chats" />
-        <Header title="Chats" />
         <div className="h-full">
           {liveChats.map((chat) => (
             <ChatCard key={chat.id} chat={chat} auth={auth} />
           ))}
         </div>
-      </AuthenticatedLayout>
-    );
+      );
+    }
   }
+
   return (
-    <AuthenticatedLayout hideSearch className="border-r">
-      <Head title="Chats" />
-      <div className="flex flex-row h-full">
-        <div className="flex flex-col w-1/3 border-r">
-          <div className="flex items-center justify-between border-b h-[6rem]">
-            <Header title="Chats" className="border-b-0 w-min" />
-            <CreateChatDialog follows={follows}>
-              <Button className="mr-12 rounded-full p-2" size="icon">
-                <NewMessage />
-              </Button>
-            </CreateChatDialog>
-          </div>
-
-          <div className="h-full">
-            {liveChats.map((chat) => (
-              <ChatCard
-                key={chat.id}
-                chat={chat}
-                auth={auth}
-                selected={currentChat?.id === chat.id}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="w-2/3">
-          <ChatScreen chat={currentChat} auth={auth} messages={messages} />
-        </div>
-      </div>
-    </AuthenticatedLayout>
+    <ChatsLayout
+      auth={auth}
+      chats={liveChats}
+      follows={follows}
+      currentChat={currentChat}
+    >
+      <Children />
+    </ChatsLayout>
   );
 }
