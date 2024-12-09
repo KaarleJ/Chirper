@@ -1,10 +1,20 @@
 import { User } from "@/types";
 import { UserRound as UserIcon } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import { cn } from "@/lib/utils";
 
-export function UserCard({ user }: { user: User }) {
+export function UserCard({
+  user,
+  orientation = "vertical",
+}: {
+  user: User;
+  orientation?: "horizontal" | "vertical";
+}) {
   return (
-    <div className="flex">
+    <div
+      className="flex items-start"
+      onClick={(e: React.FormEvent) => e.stopPropagation()}
+    >
       {user.profile_picture ? (
         <img
           src={user.profile_picture}
@@ -14,16 +24,22 @@ export function UserCard({ user }: { user: User }) {
       ) : (
         <UserIcon />
       )}
-      <div className="flex flex-col items-start">
+      <div
+        className={cn(
+          "flex",
+          orientation === "horizontal"
+            ? "flex-row items-end"
+            : "flex-col items-start"
+        )}
+      >
         <p className="text-lg px-2">{user.name}</p>
-        <p className="text-sm px-2 text-gray-500 font-thin">@{user.username}</p>
+        <p className="text-lg px-2 text-gray-500 font-thin">@{user.username}</p>
       </div>
     </div>
   );
 }
 
 export function UserCardLink({ user }: { user: User }) {
-
   return (
     <Link
       href={`/profile/${user.id}`}
