@@ -25,6 +25,9 @@ Route::get('/', function () {
 Route::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect']);
 Route::get('/auth/callback/{provider}', [SocialAuthController::class, 'callback']);
 
+Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/chirps/{chirp}', [ChirpController::class, 'show'])->name('chirps.show');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [ChirpController::class, 'index'])->name('home');
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
@@ -35,7 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/request-delete', [ProfileController::class, 'requestDelete'])->name('profile.requestDelete');
 
-    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/{user}/follow', [FollowController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user}/unfollow', [FollowController::class, 'unfollow'])->name('profile.unfollow');
 

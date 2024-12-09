@@ -15,7 +15,7 @@ class ChirpController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render("Chirps/Index", ['chirps' => Chirp::with('user:id,username,profile_picture')->latest()->get(),]);
+        return Inertia::render("Chirps/Index", ['chirps' => Chirp::with('user:id,username,profile_picture,name')->latest()->get(),]);
     }
 
     /**
@@ -45,7 +45,7 @@ class ChirpController extends Controller
      */
     public function show(Chirp $chirp)
     {
-        //
+        return Inertia::render("Chirps/Show", ['chirp' => $chirp->load('user:id,username,profile_picture')]);
     }
 
     /**
