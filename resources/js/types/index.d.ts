@@ -41,3 +41,11 @@ interface Message {
   updated_at: string;
   read_at: string;
 }
+
+interface Comment {
+  id: number;
+  message: string;
+  user: User;
+  created_at: string;
+  updated_at: string;
+}
