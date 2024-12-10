@@ -72,7 +72,11 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   }
 
   function navigateToChirp() {
-    if (!editing) {
+    const isChirpRoute = window.location.pathname.includes(
+      route("chirps.show", { chirp: chirp.id })
+    );
+
+    if (!editing && !isChirpRoute) {
       router.get(route("chirps.show", { chirp: chirp.id }));
     }
   }
@@ -82,8 +86,8 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
       <div onClick={navigateToChirp} className="flex-1">
         <div className="flex justify-between items-center">
           <div className="flex items-start">
-            <UserCard user={chirp.user} orientation="horizontal" />
-            <small className="ml-2 text-sm py-1 text-gray-500">
+            <UserCard user={chirp.user} />
+            <small className="ml-2 text-sm py-1.5 text-gray-500">
               {dayjs(chirp.created_at).fromNow()}
             </small>
             {chirp.created_at !== chirp.updated_at && (

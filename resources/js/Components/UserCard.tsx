@@ -5,10 +5,8 @@ import { cn } from "@/lib/utils";
 
 export function UserCard({
   user,
-  orientation = "vertical",
 }: {
   user: User;
-  orientation?: "horizontal" | "vertical";
 }) {
   return (
     <div
@@ -25,15 +23,10 @@ export function UserCard({
         <UserIcon />
       )}
       <div
-        className={cn(
-          "flex",
-          orientation === "horizontal"
-            ? "flex-row items-end"
-            : "flex-col items-start"
-        )}
+        className="flex flex-col"
       >
         <p className="text-lg px-2">{user.name}</p>
-        <p className="text-lg px-2 text-gray-500 font-thin">@{user.username}</p>
+        <p className="text-md px-2 text-gray-500 font-thin">@{user.username}</p>
       </div>
     </div>
   );
