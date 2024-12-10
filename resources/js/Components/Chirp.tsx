@@ -82,7 +82,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   }
 
   return (
-    <div className="px-8 py-4 flex space-x-2 border-b hover:cursor-pointer hover:bg-accent transition-all">
+    <div className="px-4 py-4 flex space-x-2 border-b hover:cursor-pointer hover:bg-accent transition-all">
       <div onClick={navigateToChirp} className="flex-1">
         <div className="flex justify-between items-center">
           <div className="flex items-start">
@@ -119,7 +119,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
             </div>
           </form>
         ) : (
-          <p className="mt-4 text-lg text-gray-900">{chirp.message}</p>
+          <p className="mt-4 px-12 text-lg text-gray-900">{chirp.message}</p>
         )}
         <ActionButtons />
       </div>
@@ -130,17 +130,9 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
 function ActionButtons() {
   return (
     <div
-      className="w-full flex justify-start gap-10 pt-4"
+      className="w-full flex justify-start gap-2 pt-4"
       onClick={(e: React.FormEvent) => e.stopPropagation()}
     >
-      <Button
-        className="rounded-full text-gray-500"
-        size="icon"
-        variant="ghost"
-        onClick={() => console.log("Reply")}
-      >
-        <Reply />
-      </Button>
       <Button
         className="rounded-full text-gray-500"
         size="icon"
@@ -148,6 +140,14 @@ function ActionButtons() {
         onClick={() => console.log("Like")}
       >
         <Like />
+      </Button>
+      <Button
+        className="rounded-full text-gray-500"
+        size="icon"
+        variant="ghost"
+        onClick={() => console.log("Reply")}
+      >
+        <Reply />
       </Button>
     </div>
   );

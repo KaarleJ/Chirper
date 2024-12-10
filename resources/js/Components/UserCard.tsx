@@ -3,11 +3,7 @@ import { UserRound as UserIcon } from "lucide-react";
 import { Link } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 
-export function UserCard({
-  user,
-}: {
-  user: User;
-}) {
+export function UserCard({ user }: { user: User }) {
   return (
     <div
       className="flex items-start"
@@ -22,9 +18,7 @@ export function UserCard({
       ) : (
         <UserIcon />
       )}
-      <div
-        className="flex flex-col"
-      >
+      <div className="flex flex-col">
         <p className="text-lg px-2">{user.name}</p>
         <p className="text-md px-2 text-gray-500 font-thin">@{user.username}</p>
       </div>
