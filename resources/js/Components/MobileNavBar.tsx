@@ -8,7 +8,7 @@ import { House, Mail, User, Search, CirclePlus } from "lucide-react";
 
 export default function MobileNavBar() {
   return (
-    <NavigationMenu className="absolute bottom-0 left-0 h-20 w-screen border-t">
+    <NavigationMenu className="absolute bottom-0 left-0 h-20 w-screen border-t bg-background z-50">
       <NavigationMenuList className="w-screen px-8 py-4 flex items-center justify-between">
         <NavigationMenuItem>
           <NavLink href={route("home")}>

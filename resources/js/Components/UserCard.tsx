@@ -1,13 +1,27 @@
 import { User } from "@/types";
 import { UserRound as UserIcon } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 
-export function UserCard({ user }: { user: User }) {
+export function UserCard({
+  user,
+  disabled = false,
+}: {
+  user: User;
+  disabled?: boolean;
+}) {
+  function navigateToProfile(e: React.FormEvent) {
+    e.stopPropagation();
+    router.get(route("profile.show", { user: user.id }));
+  }
   return (
     <div
-      className="flex items-start"
-      onClick={(e: React.FormEvent) => e.stopPropagation()}
+      className={cn(
+        "flex items-start rounded-full",
+        !disabled && "hover:bg-secondary hover:cursor-pointer transition-all"
+      )}
+      onClick={navigateToProfile}
     >
       {user.profile_picture ? (
         <img
