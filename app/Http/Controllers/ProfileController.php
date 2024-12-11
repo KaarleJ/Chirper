@@ -17,6 +17,33 @@ use Illuminate\Support\Facades\URL;
 
 class ProfileController extends Controller
 {
+
+    /*
+     * Display the user's profile.
+     */
+    public function show(User $user)
+    {
+        $is_following = $user->followers()->where('follower_id', Auth::id())->exists();
+        $followers = $user->followers()->count();
+        $followings = $user->followings()->count();
+        return Inertia::render('Profile/Show', [
+            'user' => $user->only('id', 'name', 'username', 'profile_picture'),
+            'chirps' => $user->chirps()
+                ->with('user:id,username,profile_picture,name')
+                ->withCount('likes')
+                ->latest()
+                ->get()
+                ->map(function ($chirp) {
+                    $chirp->setAttribute('liked', $chirp->likes()->where('user_id', Auth::id())->exists());
+                    return $chirp;
+                }),
+            'is_following' => $is_following,
+            'followers' => $followers,
+            'followings' => $followings,
+        ]);
+    }
+
+
     /**
      * Display the user's profile form.
      */
