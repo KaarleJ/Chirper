@@ -12,9 +12,9 @@ return new class extends Migration {
   {
     Schema::create('comments', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('chirp_id')->constrained()->onDelete('cascade'); // Link to chirps
-      $table->foreignId('user_id')->constrained()->onDelete('cascade'); // User who created the comment
-      $table->text('content'); // Comment content
+      $table->foreignId('chirp_id')->constrained()->onDelete('cascade');
+      $table->foreignId('user_id')->constrained()->onDelete('cascade');
+      $table->text('content');
       $table->timestamps();
     });
   }
