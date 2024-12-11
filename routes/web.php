@@ -8,6 +8,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/chirps/{chirp}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/chirps/{chirp}/like', [LikeController::class, 'toggle'])->name('chirps.like');
 
     Route::post('/profile/{user}/follow', [FollowController::class, 'follow'])->name('profile.follow');
     Route::post('/profile/{user}/unfollow', [FollowController::class, 'unfollow'])->name('profile.unfollow');
