@@ -19,14 +19,6 @@ class ChirpController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -45,15 +37,7 @@ class ChirpController extends Controller
      */
     public function show(Chirp $chirp)
     {
-        return Inertia::render("Chirps/Show", ['chirp' => $chirp->load('user:id,username,profile_picture,name')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Chirp $chirp)
-    {
-        //
+        return Inertia::render("Chirps/Show", ['chirp' => $chirp->load(relations: ['user:id,username,profile_picture,name', 'comments.user:id,username,profile_picture,name']),]);
     }
 
     /**
