@@ -13,7 +13,9 @@ export function UserCard({
 }) {
   function navigateToProfile(e: React.FormEvent) {
     e.stopPropagation();
-    router.get(route("profile.show", { user: user.id }));
+    if (!disabled) {
+      router.get(route("profile.show", { user: user.id }));
+    }
   }
   return (
     <div
