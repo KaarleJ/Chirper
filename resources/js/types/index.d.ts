@@ -13,6 +13,8 @@ export interface Chirp {
   id: number;
   user: User;
   message: string;
+  liked: boolean;
+  likes_count: number;
   created_at: string;
   updated_at: string;
   comments: Comment[];
