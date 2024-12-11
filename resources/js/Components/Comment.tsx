@@ -12,7 +12,7 @@ export default function Comment({ comment }: { comment: Comment }) {
         </small>
       </div>
 
-      <p className="text-lg px-12">{comment.message}</p>
+      <p className="text-lg px-12">{comment.content}</p>
     </div>
   );
 }

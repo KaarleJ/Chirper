@@ -15,6 +15,7 @@ export interface Chirp {
   message: string;
   created_at: string;
   updated_at: string;
+  comments: Comment[];
 }
 
 export type PageProps<
@@ -44,7 +45,7 @@ interface Message {
 
 interface Comment {
   id: number;
-  message: string;
+  content: string;
   user: User;
   created_at: string;
   updated_at: string;

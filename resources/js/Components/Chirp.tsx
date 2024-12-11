@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, useForm, usePage } from "@inertiajs/react";
-import { Chirp as ChirpType } from "@/types";
+import { Chirp as ChirpType, PageProps } from "@/types";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -10,10 +10,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/Components/ui/dialog";
 import { Ellipsis } from "lucide-react";
 import { MessageCircle as Reply, Heart as Like } from "lucide-react";
 import { UserCard } from "./UserCard";
 import { router } from "@inertiajs/react";
+import { Separator } from "./ui/separator";
+import { Textarea } from "./ui/textarea";
+import { cn } from "@/lib/utils";
 
 dayjs.extend(relativeTime);
 
@@ -37,17 +47,12 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   function OwnerActions() {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger
-          asChild
-          onClick={(e: React.FormEvent) => e.stopPropagation()}
-        >
+        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
           <Button className="rounded-full" variant="ghost" size="icon">
             <Ellipsis className="text-gray-600" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          onClick={(e: React.FormEvent) => e.stopPropagation()}
-        >
+        <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
           <DropdownMenuItem>
             <button
               onClick={() => setEditing(true)}
@@ -72,9 +77,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   }
 
   function navigateToChirp() {
-    const isChirpRoute = window.location.pathname.includes(
-      route("chirps.show", { chirp: chirp.id })
-    );
+    const isChirpRoute = window.location.pathname.includes("chirps/");
 
     if (!editing && !isChirpRoute) {
       router.get(route("chirps.show", { chirp: chirp.id }));
@@ -82,7 +85,12 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
   }
 
   return (
-    <div className="px-4 py-4 flex space-x-2 border-b hover:cursor-pointer hover:bg-accent transition-all">
+    <div
+      className={cn(
+        "px-4 py-4 flex space-x-2 border-b",
+        !editing && "hover:cursor-pointer hover:bg-secondary transition-all"
+      )}
+    >
       <div onClick={navigateToChirp} className="flex-1">
         <div className="flex justify-between items-center">
           <div className="flex items-start">
@@ -98,15 +106,16 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
         </div>
         {editing ? (
           <form onSubmit={submit}>
-            <textarea
+            <Textarea
               value={data.message}
               onChange={(e) => setData("message", e.target.value)}
-              className="mt-4 w-full text-gray-900 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+              className="mt-4 mx-12"
             />
             <p className="text-destructive">{errors.message}</p>
             <div className="space-x-2">
               <Button>Save</Button>
-              <button
+              <Button
+                variant="ghost"
                 className="mt-4"
                 onClick={() => {
                   setEditing(false);
@@ -115,19 +124,31 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
                 }}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         ) : (
           <p className="mt-4 px-12 text-lg text-gray-900">{chirp.message}</p>
         )}
-        <ActionButtons />
+        <ActionButtons chirp={chirp} auth={auth} />
       </div>
     </div>
   );
 }
 
-function ActionButtons() {
+function ActionButtons({ chirp, auth }: PageProps & { chirp: ChirpType }) {
+  const [open, setOpen] = useState(false);
+  const { data, setData, post, clearErrors, reset, errors } = useForm({
+    content: "",
+  });
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    post(route("comments.store", chirp.id), {
+      onSuccess: () => setOpen(false),
+    });
+  };
+
   return (
     <div
       className="w-full flex justify-start gap-2 pt-4"
@@ -141,14 +162,46 @@ function ActionButtons() {
       >
         <Like />
       </Button>
-      <Button
-        className="rounded-full text-gray-500"
-        size="icon"
-        variant="ghost"
-        onClick={() => console.log("Reply")}
-      >
-        <Reply />
-      </Button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button
+            className="rounded-full text-gray-500"
+            size="icon"
+            variant="ghost"
+            onClick={() => console.log("Reply")}
+          >
+            <Reply />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reply to {chirp.user.username}</DialogTitle>
+            <UserCard user={chirp.user} />
+            <p className="px-12">{chirp.message}</p>
+          </DialogHeader>
+          <Separator className="my-2" />
+          <UserCard user={auth.user} />
+          <form onSubmit={submit}>
+            <Textarea
+              className="mb-4"
+              placeholder="Reply to this chirp"
+              value={data.content}
+              onChange={(e) => setData("content", e.target.value)}
+            />
+            <div className="space-x-2">
+              <Button type="submit">Reply</Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
