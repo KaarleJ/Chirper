@@ -138,7 +138,9 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
 
 function ActionButtons({ chirp, auth }: PageProps & { chirp: ChirpType }) {
   const [open, setOpen] = useState(false);
-  const { data, setData, post, clearErrors, reset, errors } = useForm({
+  const [liked, setLiked] = useState(chirp.liked);
+  const [likesCount, setLikesCount] = useState(chirp.likes_count);
+  const { data, setData, post } = useForm({
     content: "",
   });
 
@@ -149,6 +151,23 @@ function ActionButtons({ chirp, auth }: PageProps & { chirp: ChirpType }) {
     });
   };
 
+  const toggleLike = () => {
+    setLiked(!liked);
+    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
+    window.axios
+      .post(route("chirps.like", chirp.id))
+      .then((response) => {
+        const data = response.data;
+        setLiked(data.status === "liked");
+        setLikesCount(data.likes_count);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLiked(chirp.liked);
+        setLikesCount(chirp.likes_count);
+      });
+  };
+
   return (
     <div
       className="w-full flex justify-start gap-2 pt-4"
@@ -156,11 +175,15 @@ function ActionButtons({ chirp, auth }: PageProps & { chirp: ChirpType }) {
     >
       <Button
         className="rounded-full text-gray-500"
-        size="icon"
+        size="sm"
         variant="ghost"
-        onClick={() => console.log("Like")}
+        onClick={toggleLike}
       >
-        <Like />
+        <Like
+          fill={liked ? "#2563eb" : "background"}
+          className={liked ? "text-primary" : ""}
+        />
+        <span>{likesCount}</span>
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
