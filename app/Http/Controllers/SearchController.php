@@ -27,7 +27,15 @@ class SearchController extends Controller
           $user->is_following = $user->is_following > 0;
           return $user;
         })
-      : Chirp::where('message', 'ilike', "%{$query}%")->with('user:id,username,profile_picture')->get();
+      : Chirp::where('message', 'ilike', "%{$query}%")
+        ->with('user:id,username,profile_picture')
+        ->withCount('likes')
+        ->get()
+        ->map(function ($chirp) use ($authUser) {
+          $chirp->setAttribute('liked', $chirp->likes()->where('user_id', $authUser->id)->exists());
+          return $chirp;
+        });
+    ;
 
 
     return Inertia::render('Search', [
