@@ -19,6 +19,7 @@ class ChirpController extends Controller
     return Inertia::render("Chirps/Index", [
       'chirps' => Chirp::with('user:id,username,profile_picture,name')
         ->withCount('likes')
+        ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($chirp) {
           $chirp->setAttribute('liked', $chirp->likes()->where('user_id', Auth::user()->id)->exists());
