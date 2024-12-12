@@ -24,7 +24,6 @@ export default function Edit({
     <AuthenticatedLayout>
       <Head title="Profile" />
       <Header title="Profile" />
-
       <div className="py-12">
         <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
           <Card>
@@ -43,7 +42,6 @@ export default function Edit({
               />
             </CardContent>
           </Card>
-
           {!isSocial && (
             <Card>
               <CardHeader>
@@ -58,7 +56,6 @@ export default function Edit({
               </CardContent>
             </Card>
           )}
-
           <Card>
             <CardHeader>
               <CardTitle>Delete Account</CardTitle>

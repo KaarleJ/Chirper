@@ -37,7 +37,6 @@ export default function ChatsLayout({
                 </Button>
               </CreateChatDialog>
             </div>
-
             <div className="h-full">
               {chats.map((chat) => (
                 <ChatCard

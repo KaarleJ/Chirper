@@ -18,27 +18,23 @@ export default function SideNav() {
               <ApplicationLogo className="h-14 w-auto fill-current" />
             </NavLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <NavLink href={route("home")}>
               <House size={24} /> Home
             </NavLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <NavLink href={route("profile.edit")}>
               <User />
               Profile
             </NavLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <NavLink href={route("chats.index")}>
               <Mail />
               Chats
             </NavLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <NavLink
               href={route("chirps.index")}
@@ -48,7 +44,6 @@ export default function SideNav() {
               Chirp
             </NavLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <ProfileMenu />
           </NavigationMenuItem>

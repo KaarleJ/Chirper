@@ -1,16 +1,12 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useForm, Head } from "@inertiajs/react";
-import { PageProps } from "@/types";
 import Chirp from "@/Components/Chirp";
 import { Chirp as ChirpType } from "@/types";
 import Header from "@/Components/Header";
 import { Button } from "@/Components/ui/button";
 
-export default function Index({
-  auth,
-  chirps,
-}: PageProps & { chirps: ChirpType[] }) {
+export default function Index({ chirps }: { chirps: ChirpType[] }) {
   const { data, setData, post, processing, reset, errors } = useForm({
     message: "",
   });
@@ -23,7 +19,6 @@ export default function Index({
   return (
     <AuthenticatedLayout>
       <Head title="Home" />
-
       <Header title="Home" />
       <div className="w-full">
         <form onSubmit={submit} className="p-8 border-b">
@@ -38,7 +33,6 @@ export default function Index({
             Chirp
           </Button>
         </form>
-
         {chirps.map((chirp) => (
           <Chirp key={chirp.id} chirp={chirp} />
         ))}
