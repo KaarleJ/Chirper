@@ -1,12 +1,12 @@
 import Header from "@/Components/Header";
 import { Button } from "@/Components/ui/button";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, usePage, useForm } from "@inertiajs/react";
+import { Head, usePage, useForm, Link } from "@inertiajs/react";
 import { Input } from "@/Components/ui/input";
 import { FormEvent } from "react";
 import { cn } from "@/lib/utils";
 import { Chirp, User } from "@/types";
-import { UserCardLink} from "@/Components/UserCard";
+import { UserCard } from "@/Components/UserCard";
 import ChirpCard from "@/Components/ChirpCard";
 
 type SearchResults<T extends "people" | "chirps"> = T extends "people"
@@ -21,12 +21,13 @@ export default function Search() {
     strategy: (strategy as string | undefined) || "",
   });
 
-  function submit(e?: FormEvent) {
-    e?.preventDefault();
+  function submit(e: FormEvent) {
+    e.preventDefault();
     get(route("search.index"));
   }
 
-  function changeStrategy(e?: FormEvent) {
+  function changeStrategy(e: FormEvent) {
+    e.preventDefault();
     const newStrategy = strategy === "people" ? "chirps" : "people";
     setData("strategy", newStrategy);
     get(route("search.index", { strategy: newStrategy }), {
@@ -39,7 +40,6 @@ export default function Search() {
   return (
     <AuthenticatedLayout>
       <Head title="Search" />
-
       <Header title="Search" className="border-b-0 pb-4" />
       <div className="border-b">
         <form onSubmit={submit}>
@@ -79,7 +79,30 @@ export default function Search() {
 
       {strategy === "people"
         ? (resultsData as User[]).map((user) => (
-            <UserCardLink key={user.id} user={user} />
+            <Link
+              key={user.id}
+              href={`/profile/${user.id}`}
+              className="flex px-8 py-4 justify-between hover:bg-accent transition-all border-b"
+            >
+              <UserCard user={user} disabled />
+
+              <Link
+                href={route(
+                  user.is_following ? "profile.unfollow" : "profile.follow",
+                  {
+                    user: user.id,
+                  }
+                )}
+                method="post"
+                as="button"
+                className={cn(
+                  "bg-primary text-primary-foreground rounded-full px-4 py-2 h-10 transition-all hover:brightness-110",
+                  user.is_following && "bg-secondary text-secondary-foreground"
+                )}
+              >
+                {user.is_following ? "Unfollow" : "Follow"}
+              </Link>
+            </Link>
           ))
         : (resultsData as Chirp[]).map((chirp) => (
             <ChirpCard key={chirp.id} chirp={chirp} />
