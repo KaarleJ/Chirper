@@ -30,11 +30,9 @@ export default function ResetPassword({
   return (
     <GuestLayout>
       <Head title="Reset Password" />
-
       <form onSubmit={submit}>
         <div>
           <Label htmlFor="email">Email</Label>
-
           <Input
             id="email"
             type="email"
@@ -46,10 +44,8 @@ export default function ResetPassword({
           />
           <p className="text-destructive mt-2">{errors.email}</p>
         </div>
-
         <div className="mt-4">
           <Label htmlFor="password">Password</Label>
-
           <Input
             id="password"
             type="password"
@@ -59,13 +55,11 @@ export default function ResetPassword({
             autoComplete="new-password"
             onChange={(e) => setData("password", e.target.value)}
           />
-
           <p className="text-destructive mt-2">{errors.password}</p>
         </div>
 
         <div className="mt-4">
           <Label htmlFor="password_confirmation">Confirm password</Label>
-
           <Input
             type="password"
             name="password_confirmation"
@@ -74,12 +68,10 @@ export default function ResetPassword({
             autoComplete="new-password"
             onChange={(e) => setData("password_confirmation", e.target.value)}
           />
-
           <p className="text-destructive mt-2">
             {errors.password_confirmation}
           </p>
         </div>
-
         <div className="mt-4 flex items-center justify-end">
           <Button className="ms-4" disabled={processing}>
             Reset Password

@@ -25,11 +25,9 @@ export default function Register() {
   return (
     <GuestLayout>
       <Head title="Register" />
-
       <form onSubmit={submit}>
         <div>
           <Label htmlFor="name">Name</Label>
-
           <Input
             id="name"
             name="name"
@@ -39,13 +37,10 @@ export default function Register() {
             onChange={(e) => setData("name", e.target.value)}
             required
           />
-
           <p className="text-destructive mt-2">{errors.name}</p>
         </div>
-
         <div>
           <Label htmlFor="username">Username</Label>
-
           <Input
             id="username"
             name="username"
@@ -55,13 +50,10 @@ export default function Register() {
             onChange={(e) => setData("username", e.target.value)}
             required
           />
-
           <p className="text-destructive mt-2">{errors.name}</p>
         </div>
-
         <div className="mt-4">
           <Label htmlFor="email">Email</Label>
-
           <Input
             id="email"
             type="email"
@@ -72,13 +64,10 @@ export default function Register() {
             onChange={(e) => setData("email", e.target.value)}
             required
           />
-
           <p className="text-destructive mt-2">{errors.email}</p>
         </div>
-
         <div className="mt-4">
           <Label htmlFor="password">Password</Label>
-
           <Input
             id="password"
             type="password"
@@ -89,13 +78,10 @@ export default function Register() {
             onChange={(e) => setData("password", e.target.value)}
             required
           />
-
           <p className="text-destructive mt-2">{errors.password}</p>
         </div>
-
         <div className="mt-4">
           <Label htmlFor="password_confirmation">Confirm password</Label>
-
           <Input
             id="password_confirmation"
             type="password"
@@ -106,10 +92,8 @@ export default function Register() {
             onChange={(e) => setData("password_confirmation", e.target.value)}
             required
           />
-
           <p className="text-destructive mt-2">{errors.email}</p>
         </div>
-
         <div className="mt-4 flex items-center justify-end">
           <Link
             href={route("login")}
@@ -117,7 +101,6 @@ export default function Register() {
           >
             Already registered?
           </Link>
-
           <Button className="ms-4" disabled={processing}>
             Register
           </Button>

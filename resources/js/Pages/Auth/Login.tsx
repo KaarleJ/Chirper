@@ -30,15 +30,12 @@ export default function Login({
   return (
     <GuestLayout>
       <Head title="Log in" />
-
       {status && (
         <div className="mb-4 text-sm font-medium text-green-600">{status}</div>
       )}
-
       <form onSubmit={submit}>
         <div>
           <Label htmlFor="email">Email</Label>
-
           <Input
             id="email"
             type="email"
@@ -48,13 +45,10 @@ export default function Login({
             autoComplete="username"
             onChange={(e) => setData("email", e.target.value)}
           />
-
           <p className="mt-2 text-destructive">{errors.email}</p>
         </div>
-
         <div className="mt-4">
           <Label htmlFor="password">Password</Label>
-
           <Input
             id="password"
             type="password"
@@ -64,10 +58,8 @@ export default function Login({
             autoComplete="current-password"
             onChange={(e) => setData("password", e.target.value)}
           />
-
           <p className="mt-2 text-destructive">{errors.password}</p>
         </div>
-
         <div className="mt-4 block">
           <label className="flex items-center">
             <Checkbox
@@ -80,7 +72,6 @@ export default function Login({
             <span className="ms-2 text-sm text-gray-600">Remember me</span>
           </label>
         </div>
-
         <div className="mt-4 flex items-center justify-end">
           {canResetPassword && (
             <Link
@@ -90,7 +81,6 @@ export default function Login({
               Forgot your password?
             </Link>
           )}
-
           <Button className="ms-4" disabled={processing}>
             Log in
           </Button>
