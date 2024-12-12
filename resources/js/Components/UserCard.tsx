@@ -20,7 +20,7 @@ export function UserCard({
   return (
     <div
       className={cn(
-        "flex items-start rounded-full",
+        "flex items-start rounded-full w-max text-left",
         !disabled && "hover:bg-secondary hover:cursor-pointer transition-all"
       )}
       onClick={navigateToProfile}

@@ -5,31 +5,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { UserRound as User } from "lucide-react";
+import { UserCard } from "./UserCard";
 
 export default function ProfileMenu({ mobile }: { mobile?: boolean }) {
   const { auth } = usePage().props;
-  const profilePicture = auth.user.profile_picture;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center text-foreground text-xl font-semibold hover:opacity-50 py-2 transition-all text-nowrap rounded-full w-max">
-        {profilePicture ? (
-          <img
-            src={profilePicture}
-            alt="Profile Picture"
-            className="w-10 h-10 rounded-full"
-          />
-        ) : (
-          <User />
-        )}
-        {!mobile && (
-          <div className="flex flex-col items-start">
-            <p className="text-lg px-2">{auth.user.name}</p>
-            <p className="text-sm px-2 text-gray-500 font-thin">
-              @{auth.user.username}
-            </p>
-          </div>
-        )}
+      <DropdownMenuTrigger className="text-foreground hover:opacity-50 py-2 transition-all rounded-full">
+        <UserCard user={auth.user} disabled />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side="top"

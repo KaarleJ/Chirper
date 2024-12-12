@@ -1,10 +1,9 @@
-import MobileNavBar from "@/Components/MobileNavBar";
-import MobileTopBar from "@/Components/MobileTopBar";
 import SearchBar from "@/Components/SearchBar";
 import SideNav from "@/Components/SideNav";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { PropsWithChildren } from "react";
+import MobileAuthenticatedLayout from "./MobileAuthenticatedLayout";
 
 export default function Authenticated({
   children,
@@ -14,11 +13,9 @@ export default function Authenticated({
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (!isDesktop) {
     return (
-      <div className="flex flex-col item-start">
-        <MobileTopBar />
-        <main className={cn("w-full my-10", className)}>{children}</main>
-        <MobileNavBar />
-      </div>
+      <MobileAuthenticatedLayout className={cn("w-full my-10", className)}>
+        {children}
+      </MobileAuthenticatedLayout>
     );
   }
   return (

@@ -14,9 +14,12 @@ export default function ChatCard({
   return (
     <Link
       href={route("chats.show", { chat: chat })}
-      className={cn("flex border-b p-2", selected && "bg-gray-100")}
+      className={cn(
+        "flex border-b p-2",
+        selected ? "bg-gray-100" : "hover:bg-gray-100 transition-all"
+      )}
     >
-      <UserCard user={chatPartner} />
+      <UserCard user={chatPartner} disabled />
       <p className="self-end px-4 overflow-hidden truncate opacity-50 max-w-[20rem]">
         {message}
       </p>
