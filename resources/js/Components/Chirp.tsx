@@ -170,7 +170,7 @@ function ActionButtons({ chirp, auth }: PageProps & { chirp: ChirpType }) {
 
   return (
     <div
-      className="w-full flex justify-start gap-2 pt-4"
+      className="w-min flex justify-start gap-2 pt-4"
       onClick={(e: React.FormEvent) => e.stopPropagation()}
     >
       <Button
