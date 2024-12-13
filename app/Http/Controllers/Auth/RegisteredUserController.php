@@ -15,39 +15,39 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): Response
-    {
-        return Inertia::render('Auth/Register');
-    }
+  /**
+   * Display the registration view.
+   */
+  public function create(): Response
+  {
+    return Inertia::render('Auth/Register');
+  }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|alpha_dash|max:255|unique:' . User::class,
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+  /**
+   * Handle an incoming registration request.
+   *
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  public function store(Request $request): RedirectResponse
+  {
+    $request->validate([
+      'name' => 'required|string|max:255',
+      'username' => 'required|string|alpha_dash|max:255|unique:' . User::class,
+      'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+      'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+      'name' => $request->name,
+      'username' => $request->username,
+      'email' => $request->email,
+      'password' => Hash::make($request->password),
+    ]);
 
-        event(new Registered($user));
+    event(new Registered($user));
 
-        Auth::login($user);
+    Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
-    }
+    return redirect(route('dashboard', absolute: false));
+  }
 }

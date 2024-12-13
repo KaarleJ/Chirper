@@ -11,51 +11,51 @@ use Illuminate\Queue\SerializesModels;
 
 class AccountDeletionMail extends Mailable
 {
-    use Queueable, SerializesModels;
+  use Queueable, SerializesModels;
 
-    private string $deletionUrl;
+  private string $deletionUrl;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($deletionUrl)
-    {
-        $this->deletionUrl = $deletionUrl;
-    }
+  /**
+   * Create a new message instance.
+   */
+  public function __construct($deletionUrl)
+  {
+    $this->deletionUrl = $deletionUrl;
+  }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Account Deletion Mail',
-        );
-    }
+  /**
+   * Get the message envelope.
+   */
+  public function envelope(): Envelope
+  {
+    return new Envelope(
+      subject: 'Account Deletion Mail',
+    );
+  }
 
-    public function build()
-    {
-        return $this->markdown('emails.account.deletion')
-            ->with(['deletionUrl' => $this->deletionUrl]);
-    }
+  public function build()
+  {
+    return $this->markdown('emails.account.deletion')
+      ->with(['deletionUrl' => $this->deletionUrl]);
+  }
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
+  /**
+   * Get the message content definition.
+   */
+  public function content(): Content
+  {
+    return new Content(
+      view: 'view.name',
+    );
+  }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
+  /**
+   * Get the attachments for the message.
+   *
+   * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+   */
+  public function attachments(): array
+  {
+    return [];
+  }
 }

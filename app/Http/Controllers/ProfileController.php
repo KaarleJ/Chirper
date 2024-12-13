@@ -18,102 +18,100 @@ use Illuminate\Support\Facades\URL;
 class ProfileController extends Controller
 {
 
-    /*
-     * Display the user's profile.
-     */
-    public function show(User $user)
-    {
-        $is_following = $user->followers()->where('follower_id', Auth::id())->exists();
-        $followers = $user->followers()->count();
-        $followings = $user->followings()->count();
-        return Inertia::render('Profile/Show', [
-            'user' => $user->only('id', 'name', 'username', 'profile_picture'),
-            'chirps' => $user->chirps()
-                ->with('user:id,username,profile_picture,name')
-                ->withCount('likes')
-                ->latest()
-                ->get()
-                ->map(function ($chirp) {
-                    $chirp->setAttribute('liked', $chirp->likes()->where('user_id', Auth::id())->exists());
-                    return $chirp;
-                }),
-            'is_following' => $is_following,
-            'followers' => $followers,
-            'followings' => $followings,
-        ]);
+  /*
+   * Display the user's profile.
+   */
+  public function show(User $user)
+  {
+    $is_following = $user->followers()->where('follower_id', Auth::id())->exists();
+    $followers = $user->followers()->count();
+    $followings = $user->followings()->count();
+    return Inertia::render('Profile/Show', [
+      'user' => $user->only('id', 'name', 'username', 'profile_picture'),
+      'chirps' => $user->chirps()
+        ->with('user:id,username,profile_picture,name')
+        ->withCount('likes')
+        ->latest()
+        ->get()
+        ->map(function ($chirp) {
+          $chirp->setAttribute('liked', $chirp->likes()->where('user_id', Auth::id())->exists());
+          return $chirp;
+        }),
+      'is_following' => $is_following,
+      'followers' => $followers,
+      'followings' => $followings,
+    ]);
+  }
+
+
+  /**
+   * Display the user's profile form.
+   */
+  public function edit(Request $request): Response
+  {
+    return Inertia::render('Profile/Edit', [
+      'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+      'status' => session('status'),
+    ]);
+  }
+
+  /**
+   * Update the user's profile information.
+   */
+  public function update(ProfileUpdateRequest $request): RedirectResponse
+  {
+    $request->user()->fill($request->validated());
+
+    if ($request->user()->isDirty('email')) {
+      $request->user()->email_verified_at = null;
     }
 
+    $request->user()->save();
 
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): Response
-    {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
-    }
+    return Redirect::route('profile.edit');
+  }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+  /**
+   * Delete the user's account.
+   */
+  public function destroy(Request $request): RedirectResponse
+  {
+    $request->validate([
+      'password' => ['required', 'current_password'],
+    ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    $user = $request->user();
 
-        $request->user()->save();
+    Auth::logout();
 
-        return Redirect::route('profile.edit');
-    }
+    $user->delete();
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $user = $request->user();
+    return Redirect::to('/');
+  }
 
-        Auth::logout();
+  public function requestDelete()
+  {
+    $user = Auth::user();
 
-        $user->delete();
+    $deletionUrl = URL::temporarySignedRoute(
+      'profile.confirmDelete',
+      now()->addMinutes(30),
+      ['userId' => $user->id]
+    );
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    Mail::to($user->email)->send(new AccountDeletionMail($deletionUrl));
 
-        return Redirect::to('/');
-    }
+    return back()->with('status', 'A confirmation link has been sent to your email.');
+  }
 
-    public function requestDelete()
-    {
-        $user = Auth::user();
+  public function confirmDelete($userId)
+  {
+    $user = User::where('id', $userId)->first();
+    $user->delete();
 
-        // Generate a signed URL for account deletion
-        $deletionUrl = URL::temporarySignedRoute(
-            'profile.confirmDelete',
-            now()->addMinutes(30),
-            ['userId' => $user->id]
-        );
-
-        // Send the confirmation email
-        Mail::to($user->email)->send(new AccountDeletionMail($deletionUrl));
-
-        return back()->with('status', 'A confirmation link has been sent to your email.');
-    }
-
-    public function confirmDelete($userId)
-    {
-        $user = User::where('id', $userId)->first();
-        $user->delete();
-
-        return redirect('/')->with('status', 'Your account has been successfully deleted.');
-    }
+    return redirect('/')->with('status', 'Your account has been successfully deleted.');
+  }
 }

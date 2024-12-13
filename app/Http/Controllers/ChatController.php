@@ -10,109 +10,109 @@ use Inertia\Inertia;
 
 class ChatController extends Controller
 {
-    /**
-     * Display a list of chats for the authenticated user.
-     */
-    public function index()
-    {
-        $user = User::find(Auth::user()->id);
+  /**
+   * Display a list of chats for the authenticated user.
+   */
+  public function index()
+  {
+    $user = User::find(Auth::user()->id);
 
-        $follows = User::whereHas('followers', function ($query) use ($user) {
-            $query->where('follower_id', $user->id);
-        })->get();
+    $follows = User::whereHas('followers', function ($query) use ($user) {
+      $query->where('follower_id', $user->id);
+    })->get();
 
-        $chats = Chat::where('user_one_id', $user->id)
-            ->orWhere('user_two_id', $user->id)
-            ->with([
-                'userOne',
-                'userTwo',
-                'messages' => function ($query) {
-                    $query->latest()->first();
-                }
-            ])
-            ->withCount([
-                'messages as unread_count' => function ($query) use ($user) {
-                    $query->where('sender_id', '!=', $user->id)
-                        ->whereNull('read_at');
-                }
-            ])
-            ->get();
-
-        return Inertia::render('Chats/Index', [
-            'chats' => $chats,
-            'follows' => $follows,
-        ]);
-    }
-
-    /**
-     * Display messages for a specific chat.
-     */
-    public function show(Chat $chat)
-    {
-        $userId = Auth::user()->id;
-
-        if ($chat->user_one_id !== $userId && $chat->user_two_id !== $userId) {
-            abort(403, 'Unauthorized access to this chat.');
+    $chats = Chat::where('user_one_id', $user->id)
+      ->orWhere('user_two_id', $user->id)
+      ->with([
+        'userOne',
+        'userTwo',
+        'messages' => function ($query) {
+          $query->latest()->first();
         }
+      ])
+      ->withCount([
+        'messages as unread_count' => function ($query) use ($user) {
+          $query->where('sender_id', '!=', $user->id)
+            ->whereNull('read_at');
+        }
+      ])
+      ->get();
 
-        $chat->load(['userOne', 'userTwo']);
+    return Inertia::render('Chats/Index', [
+      'chats' => $chats,
+      'follows' => $follows,
+    ]);
+  }
 
-        $messages = $chat->messages()->orderBy('created_at', 'desc')->get();
+  /**
+   * Display messages for a specific chat.
+   */
+  public function show(Chat $chat)
+  {
+    $userId = Auth::user()->id;
 
-        $chats = Chat::with([
-            'userOne',
-            'userTwo',
-            'messages' => function ($query) {
-                $query->latest()->first();
-            }
-        ])
-            ->where('user_one_id', $userId)
-            ->orWhere('user_two_id', $userId)
-            ->get();
-
-        $followings = User::whereHas('followers', function ($query) use ($userId) {
-            $query->where('follower_id', $userId);
-        })->get();
-
-        return inertia('Chats/Index', [
-            'chats' => $chats,
-            'follows' => $followings,
-            'messages' => $messages,
-            'currentChat' => $chat,
-        ]);
+    if ($chat->user_one_id !== $userId && $chat->user_two_id !== $userId) {
+      abort(403, 'Unauthorized access to this chat.');
     }
 
-    /**
-     * Create or get a chat between two users.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
+    $chat->load(['userOne', 'userTwo']);
 
-        $user = User::find(Auth::user()->id);
-        $otherUserId = $request->user_id;
+    $messages = $chat->messages()->orderBy('created_at', 'desc')->get();
 
-        Chat::firstOrCreate(
-            [
-                'user_one_id' => min($user->id, $otherUserId),
-                'user_two_id' => max($user->id, $otherUserId),
-            ]
-        );
+    $chats = Chat::with([
+      'userOne',
+      'userTwo',
+      'messages' => function ($query) {
+        $query->latest()->first();
+      }
+    ])
+      ->where('user_one_id', $userId)
+      ->orWhere('user_two_id', $userId)
+      ->get();
 
-        return redirect(route('chats.index'));
-    }
+    $followings = User::whereHas('followers', function ($query) use ($userId) {
+      $query->where('follower_id', $userId);
+    })->get();
 
-    public function markAsRead(Chat $chat)
-    {
-        $userId = Auth::id();
+    return inertia('Chats/Index', [
+      'chats' => $chats,
+      'follows' => $followings,
+      'messages' => $messages,
+      'currentChat' => $chat,
+    ]);
+  }
 
-        $chat->messages()
-            ->where('sender_id', '!=', $userId)
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
+  /**
+   * Create or get a chat between two users.
+   */
+  public function store(Request $request)
+  {
+    $request->validate([
+      'user_id' => 'required|exists:users,id',
+    ]);
 
-        return response()->json(['status' => 'success']);
-    }
+    $user = User::find(Auth::user()->id);
+    $otherUserId = $request->user_id;
+
+    Chat::firstOrCreate(
+      [
+        'user_one_id' => min($user->id, $otherUserId),
+        'user_two_id' => max($user->id, $otherUserId),
+      ]
+    );
+
+    return redirect(route('chats.index'));
+  }
+
+  public function markAsRead(Chat $chat)
+  {
+    $userId = Auth::id();
+
+    $chat->messages()
+      ->where('sender_id', '!=', $userId)
+      ->whereNull('read_at')
+      ->update(['read_at' => now()]);
+
+    return response()->json(['status' => 'success']);
+  }
 }

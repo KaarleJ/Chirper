@@ -10,73 +10,73 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+  /** @use HasFactory<\Database\Factories\UserFactory> */
+  use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'password',
-        'profile_picture',
-        'is_social'
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array<int, string>
+   */
+  protected $fillable = [
+    'name',
+    'username',
+    'email',
+    'password',
+    'profile_picture',
+    'is_social'
+  ];
+
+  /**
+   * The attributes that should be hidden for serialization.
+   *
+   * @var array<int, string>
+   */
+  protected $hidden = [
+    'password',
+    'remember_token',
+  ];
+
+  public function followers()
+  {
+    return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+  }
+
+  public function followings()
+  {
+    return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+  }
+
+  public function isFollowing(User $user)
+  {
+    return $this->followings()->where('following_id', $user->id)->exists();
+  }
+
+  public function isFollowedBy(User $user)
+  {
+    return $this->followers()->where('follower_id', $user->id)->exists();
+  }
+
+  /**
+   * Get the attributes that should be cast.
+   *
+   * @return array<string, string>
+   */
+  protected function casts(): array
+  {
+    return [
+      'email_verified_at' => 'datetime',
+      'password' => 'hashed',
     ];
+  }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+  public function chirps(): HasMany
+  {
+    return $this->hasMany(Chirp::class);
+  }
 
-    public function followers()
-    {
-        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
-    }
-
-    public function followings()
-    {
-        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
-    }
-
-    public function isFollowing(User $user)
-    {
-        return $this->followings()->where('following_id', $user->id)->exists();
-    }
-
-    public function isFollowedBy(User $user)
-    {
-        return $this->followers()->where('follower_id', $user->id)->exists();
-    }
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    public function chirps(): HasMany
-    {
-        return $this->hasMany(Chirp::class);
-    }
-
-    public function likes()
-    {
-        return $this->hasMany(Like::class);
-    }
+  public function likes()
+  {
+    return $this->hasMany(Like::class);
+  }
 }
