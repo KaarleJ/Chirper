@@ -52,3 +52,7 @@ interface Comment {
   created_at: string;
   updated_at: string;
 }
+
+export type SearchResults<T extends "people" | "chirps"> = T extends "people"
+  ? User[]
+  : Chirp[];

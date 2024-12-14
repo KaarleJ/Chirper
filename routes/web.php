@@ -32,7 +32,6 @@ Route::get('/chirps/{chirp}', [ChirpController::class, 'show'])->name('chirps.sh
 
 Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/home', [ChirpController::class, 'index'])->name('home');
-  Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 });
 
 Route::middleware('auth')->group(function () {
@@ -42,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
   Route::post('/chirps/{chirp}/comments', [CommentController::class, 'store'])->name('comments.store');
   Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+  Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+  Route::get('/search/get', [SearchController::class, 'search'])->name('search.get');
 
   Route::post('/chirps/{chirp}/like', [LikeController::class, 'toggle'])->name('chirps.like');
 
