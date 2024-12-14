@@ -6,10 +6,10 @@ export default function useLiveChat({
   messages,
   chat,
 }: {
-  messages: Message[];
+  messages?: Message[];
   chat?: Chat;
 }) {
-  const [updatedMessages, setMessages] = useState<Message[]>(messages);
+  const [updatedMessages, setMessages] = useState<Message[]>(messages || []);
 
   useEffect(() => {
     if (chat) {
@@ -27,7 +27,7 @@ export default function useLiveChat({
 
   useEffect(() => {
     if (chat) {
-      const unreadMessages = messages.filter((message) => !message.read_at);
+      const unreadMessages = messages?.filter((message) => !message.read_at) || [];
       if (unreadMessages.length > 0) {
         window.axios.post(`/chats/${chat.id}/mark-as-read`);
       }

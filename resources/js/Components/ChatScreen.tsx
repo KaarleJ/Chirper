@@ -16,7 +16,7 @@ export default function ChatScreen({
   auth,
 }: {
   chat?: Chat;
-  messages: MessageType[];
+  messages?: MessageType[];
   auth: { user: User };
 }) {
   const { groupedMessages } = useLiveChat({ messages, chat });
