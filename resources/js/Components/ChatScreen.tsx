@@ -50,7 +50,7 @@ export default function ChatScreen({
         <UserCard user={chatPartner} />
       </div>
       <div className="p-4 flex flex-col justify-between items-stretch">
-        <div className="flex flex-col-reverse h-[28rem] overflow-y-auto">
+        <div className="flex flex-col-reverse h-[28rem] md:h-[44rem] overflow-y-auto">
           {groupedMessages &&
             Object.entries(groupedMessages).map(([date, messages]) => (
               <div key={date} className="flex flex-col-reverse">
