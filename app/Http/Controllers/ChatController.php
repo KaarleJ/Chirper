@@ -2,117 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\ChatService;
 use App\Models\Chat;
-use App\Models\User;
+use App\Http\Requests\ChatRequest;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ChatController extends Controller
 {
+  protected ChatService $chatService;
+
+  public function __construct(ChatService $chatService)
+  {
+    $this->chatService = $chatService;
+  }
+
   /**
-   * Display a list of chats for the authenticated user.
+   * Display a listing of the resource.
    */
   public function index()
   {
-    $user = User::find(Auth::user()->id);
-
-    $follows = User::whereHas('followers', function ($query) use ($user) {
-      $query->where('follower_id', $user->id);
-    })->get();
-
-    $chats = Chat::where('user_one_id', $user->id)
-      ->orWhere('user_two_id', $user->id)
-      ->with([
-        'userOne',
-        'userTwo',
-        'messages' => function ($query) {
-          $query->latest()->first();
-        }
-      ])
-      ->withCount([
-        'messages as unread_count' => function ($query) use ($user) {
-          $query->where('sender_id', '!=', $user->id)
-            ->whereNull('read_at');
-        }
-      ])
-      ->get();
-
-    return Inertia::render('Chats/Index', [
-      'chats' => $chats,
-      'follows' => $follows,
-    ]);
+    $chats = $this->chatService->getUserChats(Auth::id());
+    return Inertia::render('Chats/Index', $chats);
   }
 
   /**
-   * Display messages for a specific chat.
+   * Store a newly created resource in storage.
+   */
+  public function store(ChatRequest $request)
+  {
+    $chat = $this->chatService->createChat(Auth::id(), $request->validated());
+    return redirect()->route('chats.show', $chat);
+  }
+
+  /**
+   * Display the specified resource.
    */
   public function show(Chat $chat)
   {
-    $userId = Auth::user()->id;
-
-    if ($chat->user_one_id !== $userId && $chat->user_two_id !== $userId) {
-      abort(403, 'Unauthorized access to this chat.');
-    }
-
-    $chat->load(['userOne', 'userTwo']);
-
-    $messages = $chat->messages()->orderBy('created_at', 'desc')->get();
-
-    $chats = Chat::with([
-      'userOne',
-      'userTwo',
-      'messages' => function ($query) {
-        $query->latest()->first();
-      }
-    ])
-      ->where('user_one_id', $userId)
-      ->orWhere('user_two_id', $userId)
-      ->get();
-
-    $followings = User::whereHas('followers', function ($query) use ($userId) {
-      $query->where('follower_id', $userId);
-    })->get();
-
-    return inertia('Chats/Index', [
-      'chats' => $chats,
-      'follows' => $followings,
-      'messages' => $messages,
-      'currentChat' => $chat,
-    ]);
+    $chatDetails = $this->chatService->getChatDetails($chat);
+    return Inertia::render('Chats/Show', $chatDetails);
   }
 
   /**
-   * Create or get a chat between two users.
+   * Mark messages in the chat as read.
    */
-  public function store(Request $request)
-  {
-    $request->validate([
-      'user_id' => 'required|exists:users,id',
-    ]);
-
-    $user = User::find(Auth::user()->id);
-    $otherUserId = $request->user_id;
-
-    Chat::firstOrCreate(
-      [
-        'user_one_id' => min($user->id, $otherUserId),
-        'user_two_id' => max($user->id, $otherUserId),
-      ]
-    );
-
-    return redirect(route('chats.index'));
-  }
-
   public function markAsRead(Chat $chat)
   {
-    $userId = Auth::id();
-
-    $chat->messages()
-      ->where('sender_id', '!=', $userId)
-      ->whereNull('read_at')
-      ->update(['read_at' => now()]);
-
-    return response()->json(['status' => 'success']);
+    $status = $this->chatService->markMessagesAsRead($chat);
+    return response()->json(["status" => $status]);
   }
 }

@@ -3,38 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use App\Services\FollowService;
 
 class FollowController extends Controller
 {
+  protected FollowService $followService;
+
+  public function __construct(FollowService $followService)
+  {
+    $this->followService = $followService;
+  }
+
+  /**
+   * Follow a user.
+   */
   public function follow(User $user)
   {
-    if (!$user) {
-      Log::error('Route model binding failed. User not found.');
-      return back()->withErrors(['error' => 'User not found.']);
-    }
-    $authUser = User::find(Auth::user()->id);
-
-    if ($authUser->id === $user->id) {
-      return back()->withErrors(['error' => 'You cannot follow yourself.']);
-    }
-
-    if (!$authUser->isFollowing($user)) {
-      $authUser->followings()->attach($user);
-    }
-
+    $this->followService->followUser($user);
     return back()->with('success', 'You are now following ' . $user->name);
   }
 
+  /**
+   * Unfollow a user.
+   */
   public function unfollow(User $user)
   {
-    $authUser = User::find(Auth::user()->id);
-
-    if ($authUser->isFollowing($user)) {
-      $authUser->followings()->detach($user);
-    }
-
+    $this->followService->unfollowUser($user);
     return back()->with('success', 'You have unfollowed ' . $user->name);
   }
 }

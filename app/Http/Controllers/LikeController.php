@@ -3,28 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
-use Illuminate\Support\Facades\Auth;
+use App\Services\LikeService;
 
 
 class LikeController extends Controller
 {
+  protected LikeService $likeService;
+
+  public function __construct(LikeService $likeService)
+  {
+    $this->likeService = $likeService;
+  }
   /**
    * Toggle like on a chirp.
    */
   public function toggle(Chirp $chirp)
   {
-    $user = Auth::user();
-
-    $existingLike = $chirp->likes()->where('user_id', $user->id)->first();
-
-    if ($existingLike) {
-      $existingLike->delete();
-      $status = 'unliked';
-    } else {
-      $chirp->likes()->create(['user_id' => $user->id]);
-      $status = 'liked';
-    }
-
-    return response()->json(['status' => $status, 'likes_count' => $chirp->likes()->count()]);
+    $likeDetails = $this->likeService->toggleLike($chirp);
+    return response()->json($likeDetails);
   }
 }
