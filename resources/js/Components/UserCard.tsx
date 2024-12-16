@@ -35,7 +35,7 @@ export function UserCard({
       )}
       <div className="flex flex-col">
         <p className="text-lg px-2">{user.name}</p>
-        <p className="text-md px-2 text-gray-500 font-thin">@{user.username}</p>
+        <p className="text-md px-2 text-gray-500 font-thin w-[10rem] truncate">@{user.username}</p>
       </div>
     </div>
   );
