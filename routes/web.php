@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
   Route::post('/chats/{chat}/mark-as-read', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
 });
 
-Route::get('/profile/confirm-delete/{userId}', [ProfileController::class, 'confirmDelete'])->middleware('signed')->name('profile.confirmDelete');
+Route::get('/profile/confirm-delete/{user}', [ProfileController::class, 'confirmDelete'])->middleware('signed')->name('profile.confirmDelete');
 
 Route::resource('chirps', ChirpController::class)
   ->only(['index', 'store', 'update', 'destroy'])
