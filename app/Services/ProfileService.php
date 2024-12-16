@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\AccountDeletionMail;
 use App\Models\User;
+use App\Services\Auth\AuthService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
