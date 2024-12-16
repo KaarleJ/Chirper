@@ -3,51 +3,32 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
+use App\Services\Auth\SocialAuthService;
+use Illuminate\Http\RedirectResponse;
 
 class SocialAuthController extends Controller
 {
-  public function redirect($provider)
+  protected SocialAuthService $socialAuthService;
+
+  public function __construct(SocialAuthService $socialAuthService)
   {
-    if (!in_array($provider, ['github', 'google'])) {
-      abort(404);
-    }
-    return Socialite::driver($provider)->redirect();
+    $this->socialAuthService = $socialAuthService;
   }
 
-  public function callback($provider)
+  /**
+   * Redirect to the social provider.
+   */
+  public function redirect(string $provider): RedirectResponse
   {
-    $socialUser = Socialite::driver($provider)->user();
+    return $this->socialAuthService->redirectToProvider($provider);
+  }
 
-    $user = User::where('email', $socialUser->email)->first();
-
-    $profilePicture = $socialUser->getAvatar();
-
-    if ($user) {
-      $user->update([
-        "{$provider}_id" => $socialUser->id,
-        "{$provider}_token" => $socialUser->token,
-        "{$provider}_refresh_token" => $socialUser->refreshToken,
-        'profile_picture' => $profilePicture,
-        'is_social' => true,
-      ]);
-    } else {
-      $user = User::create([
-        'name' => $socialUser->name,
-        'username' => $socialUser->nickname,
-        'email' => $socialUser->email,
-        'is_social' => true,
-        "{$provider}_id" => $socialUser->id,
-        "{$provider}_token" => $socialUser->token,
-        "{$provider}_refresh_token" => $socialUser->refreshToken,
-        'profile_picture' => $profilePicture,
-      ]);
-    }
-
-    Auth::login($user);
-
+  /**
+   * Handle the callback from the social provider.
+   */
+  public function callback(string $provider): RedirectResponse
+  {
+    $this->socialAuthService->handleProviderCallback($provider);
     return redirect('/home');
   }
 }

@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
+  protected AuthService $authService;
+
+  public function __construct(AuthService $authService)
+  {
+    $this->authService = $authService;
+  }
+
   /**
    * Display the login view.
    */
@@ -29,22 +35,16 @@ class AuthenticatedSessionController extends Controller
    */
   public function store(LoginRequest $request): RedirectResponse
   {
-    $request->authenticate();
-    $request->session()->regenerate();
-
-    return redirect()->intended(route('dashboard', absolute: false));
+    $this->authService->login($request);
+    return redirect()->intended(route('home', absolute: false));
   }
 
   /**
    * Destroy an authenticated session.
    */
-  public function destroy(Request $request): RedirectResponse
+  public function destroy(): RedirectResponse
   {
-    Auth::guard('web')->logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
+    $this->authService->logout();
     return redirect('/');
   }
 }

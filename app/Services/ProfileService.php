@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\URL;
 
 class ProfileService
 {
+
+  protected AuthService $authService;
+
+  public function __construct(AuthService $authService)
+  {
+    $this->authService = $authService;
+  }
+
+
   /**
    * Fetch data for a user's profile.
    */
@@ -63,10 +72,12 @@ class ProfileService
     $deletionUrl = URL::temporarySignedRoute(
       'profile.confirmDelete',
       now()->addMinutes(30),
-      ['userId' => $user->id]
+      ['user' => $user]
     );
 
     Mail::to($user->email)->send(new AccountDeletionMail($deletionUrl));
+
+    $this->authService->logout();
   }
 
   /**

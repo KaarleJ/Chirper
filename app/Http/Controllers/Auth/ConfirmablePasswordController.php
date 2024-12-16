@@ -3,15 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\Auth\AuthService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Auth\ConfirmPasswordRequest;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ConfirmablePasswordController extends Controller
 {
+  protected AuthService $authService;
+
+  public function __construct(AuthService $authService)
+  {
+    $this->authService = $authService;
+  }
   /**
    * Show the confirm password view.
    */
@@ -23,21 +28,9 @@ class ConfirmablePasswordController extends Controller
   /**
    * Confirm the user's password.
    */
-  public function store(Request $request): RedirectResponse
+  public function store(ConfirmPasswordRequest $request): RedirectResponse
   {
-    if (
-      !Auth::guard('web')->validate([
-        'email' => $request->user()->email,
-        'password' => $request->password,
-      ])
-    ) {
-      throw ValidationException::withMessages([
-        'password' => __('auth.password'),
-      ]);
-    }
-
-    $request->session()->put('auth.password_confirmed_at', time());
-
-    return redirect()->intended(route('dashboard', absolute: false));
+    $this->authService->confirmPassword($request);
+    return redirect()->intended(route('home', absolute: false));
   }
 }
