@@ -31,7 +31,7 @@ class ChatController extends Controller
    */
   public function store(ChatRequest $request)
   {
-    $chat = $this->chatService->createChat(Auth::id(), $request->validated());
+    $chat = $this->chatService->createChat( $request->validated());
     return redirect()->route('chats.show', $chat);
   }
 
