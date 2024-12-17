@@ -49,11 +49,16 @@ class ChatService
   /**
    * Create a new chat for a specific user.
    */
-  public function createChat(int $userId, array $data)
+  public function createChat(array $data)
   {
-    $chat = new Chat($data);
-    $chat->user_id = $userId;
-    $chat->save();
+    $userId = Auth::id();
+    $otherUserId = $data['user_id'];
+    $chat = Chat::firstOrCreate(
+      [
+        'user_one_id' => min($userId, $otherUserId),
+        'user_two_id' => max($userId, $otherUserId),
+      ]
+    );
 
     return $chat;
   }
