@@ -12,15 +12,6 @@ use Illuminate\Support\Facades\URL;
 
 class ProfileService
 {
-
-  protected AuthService $authService;
-
-  public function __construct(AuthService $authService)
-  {
-    $this->authService = $authService;
-  }
-
-
   /**
    * Fetch data for a user's profile.
    */
@@ -78,7 +69,7 @@ class ProfileService
 
     Mail::to($user->email)->send(new AccountDeletionMail($deletionUrl));
 
-    $this->authService->logout();
+    Auth::logout();
   }
 
   /**
