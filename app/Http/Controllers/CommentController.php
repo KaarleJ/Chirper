@@ -6,7 +6,6 @@ use App\Http\Requests\CommentRequest;
 use App\Services\CommentService;
 use App\Models\Chirp;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
