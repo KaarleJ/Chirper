@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
 
     steps:
       - name: Checkout Code
@@ -16,11 +17,16 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: '8.2'
           extensions: mbstring, pdo_sqlite, sqlite3
+          ini-values: post_max_size=256M, max_execution_time=300
+          coverage: none
 
       - name: Install Composer Dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Install NPM Dependencies
+        run: npm install
 
       - name: Copy Environment File
         run: cp .env.testing .env
@@ -31,7 +37,7 @@ jobs:
       - name: Run Tests
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
+          DB_DATABASE: ':memory:'
         run: php artisan test
 
       - name: Set up Docker Buildx
