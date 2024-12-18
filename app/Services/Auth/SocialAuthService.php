@@ -30,7 +30,7 @@ class SocialAuthService
     $user = User::firstOrCreate(
       ['email' => $socialUser->email],
       [
-        'name' => $socialUser->name,
+        'name' => $this->getName($socialUser->name),
         'username' => $socialUser->nickname ?? $this->generateUsername($socialUser->name),
         'is_social' => true,
         "{$provider}_id" => $socialUser->id,
@@ -66,6 +66,16 @@ class SocialAuthService
    */
   protected function generateUsername(string $name): string
   {
-    return strtolower(str_replace(' ', '_', $name)) . '_' . uniqid();
+    $nameParts = explode(' ', $name);
+    return count($nameParts) > 2 ? str_replace(['“', '”'], '', $nameParts[1]) : $nameParts[0];
+  }
+
+  /**
+   * Get the first name + lastname from the name that the provider provided.
+   */
+  protected function getName(string $name): string
+  {
+    $nameParts = explode(' ', $name);
+    return count($nameParts) > 2 ? $nameParts[0] . ' ' . $nameParts[2] : $name;
   }
 }
