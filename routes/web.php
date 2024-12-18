@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ChatController;
@@ -22,10 +21,6 @@ Route::get('/', function () {
       'canRegister' => Route::has('register'),
     ]);
 });
-
-// Social authentication routes
-Route::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect']);
-Route::get('/auth/callback/{provider}', [SocialAuthController::class, 'callback']);
 
 
 // Public routes
