@@ -24,7 +24,7 @@ class SearchService
    */
   protected function searchUsers($query, $authUserId)
   {
-    return User::where('name', 'ilike', "%{$query}%")
+    return User::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
       ->withCount([
         'followers as is_following' => function ($query) use ($authUserId) {
           $query->where('follower_id', $authUserId);
@@ -42,7 +42,7 @@ class SearchService
    */
   protected function searchChirps($query, $authUserId)
   {
-    return Chirp::where('message', 'ilike', "%{$query}%")
+    return Chirp::whereRaw('LOWER(message) LIKE ?', ['%' . strtolower($query) . '%'])
       ->with('user:id,username,profile_picture')
       ->withCount('likes')
       ->get()
