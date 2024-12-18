@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Signed routes
 Route::middleware('signed')->group(function () {
   // Delete profile route
-  Route::get('/profile/confirm-delete/{user}', [ProfileController::class, 'confirmDelete']);
+  Route::get('/profile/confirm-delete/{user}', [ProfileController::class, 'confirmDelete'])->name('profile.confirmDelete');
 });
 
 require __DIR__ . '/auth.php';
