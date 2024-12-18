@@ -71,7 +71,7 @@ class ChatService
     $chat->load(['userOne', 'userTwo']);
     $messages = $chat->messages()->orderBy('created_at', 'desc')->get();
     $chats = $this->getUserChats(Auth::id());
-    // Merge the chats array with the current chat and messages
+    
     return array_merge($chats, [
       'currentChat' => $chat,
       'messages' => $messages,
