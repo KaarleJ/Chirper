@@ -98,9 +98,6 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
             <small className="ml-2 text-sm py-1.5 text-gray-500">
               {dayjs(chirp.created_at).fromNow()}
             </small>
-            {chirp.created_at !== chirp.updated_at && (
-              <small className="text-sm text-gray-600"> &middot; edited</small>
-            )}
           </div>
           {isOwner && <OwnerActions />}
         </div>
@@ -109,7 +106,7 @@ export default function Chirp({ chirp }: { chirp: ChirpType }) {
             <Textarea
               value={data.message}
               onChange={(e) => setData("message", e.target.value)}
-              className="mt-4 mx-12"
+              className="mt-4 md:mx-12 md:text-base md:w-10/12"
             />
             <p className="text-destructive">{errors.message}</p>
             <div className="space-x-2">
