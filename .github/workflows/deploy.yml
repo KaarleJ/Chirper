@@ -28,6 +28,9 @@ jobs:
       - name: Install NPM Dependencies
         run: npm install
 
+      - name: Build Assets
+        run: npm run build
+
       - name: Copy Environment File
         run: cp .env.testing .env
 
