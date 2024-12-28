@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 // Landing routes
@@ -71,6 +72,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware('signed')->group(function () {
   // Delete profile route
   Route::get('/profile/confirm-delete/{user}', [ProfileController::class, 'confirmDelete'])->name('profile.confirmDelete');
+});
+
+// Debug signed URL
+Route::get('/debug-signed-url', function () {
+  return URL::signedRoute('profile.confirmDelete', ['user' => 12]);
 });
 
 require __DIR__ . '/auth.php';
