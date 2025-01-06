@@ -8,6 +8,7 @@ import Header from "@/Components/Header";
 import CreateChatDialog from "@/Components/CreateChatDialog";
 import { Button } from "@/Components/ui/button";
 import { MailPlus as NewMessage } from "lucide-react";
+import ChatList from "@/Components/ChatList";
 
 export default function ChatsLayout({
   children,
@@ -37,16 +38,7 @@ export default function ChatsLayout({
                 </Button>
               </CreateChatDialog>
             </div>
-            <div className="h-full">
-              {chats.map((chat) => (
-                <ChatCard
-                  key={chat.id}
-                  chat={chat}
-                  auth={auth}
-                  selected={currentChat?.id === chat.id}
-                />
-              ))}
-            </div>
+            <ChatList chats={chats} currentChat={currentChat} />
           </div>
           <div className="w-2/3">{children}</div>
         </div>

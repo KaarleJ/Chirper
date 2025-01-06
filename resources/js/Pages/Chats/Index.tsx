@@ -4,6 +4,7 @@ import ChatScreen from "@/Components/ChatScreen";
 import useLiveChats from "@/hooks/useLiveChats";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import ChatsLayout from "@/Layouts/ChatsLayout";
+import ChatList from "@/Components/ChatList";
 
 export default function Chats({
   follows,
@@ -21,15 +22,7 @@ export default function Chats({
 
   return (
     <ChatsLayout auth={auth} chats={liveChats} follows={follows}>
-      {isDesktop ? (
-        <ChatScreen auth={auth} />
-      ) : (
-        <div className="h-full">
-          {liveChats.map((chat) => (
-            <ChatCard key={chat.id} chat={chat} auth={auth} />
-          ))}
-        </div>
-      )}
+      {isDesktop ? <ChatScreen auth={auth} /> : <ChatList chats={liveChats} />}
     </ChatsLayout>
   );
 }

@@ -51,7 +51,9 @@ export default function ChatScreen({
       </div>
       <div className="p-4 flex flex-col justify-between items-stretch">
         <div className="flex flex-col-reverse h-[28rem] md:h-[44rem] py-2 overflow-y-auto">
-          {groupedMessages &&
+          {!groupedMessages || Object.keys(groupedMessages).length === 0 ? (
+            <p className="text-center text-gray-500">No messages yet</p>
+          ) : (
             Object.entries(groupedMessages).map(([date, messages]) => (
               <div key={date} className="flex flex-col-reverse">
                 {messages.map((message) => (
@@ -67,7 +69,8 @@ export default function ChatScreen({
                   {date}
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
         <form onSubmit={submit} className="p-4 flex gap-2">
           <Input
